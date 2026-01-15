@@ -25,7 +25,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   }
 
   return (
-    <div className="flex gap-2 items-end">
+    <div className="flex gap-2 items-center">
       <div className="flex-grow relative">
         <textarea
           value={input}
