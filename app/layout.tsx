@@ -8,6 +8,18 @@ export const metadata: Metadata = {
   title: 'City of Solvang - The Danish Capital of America',
   description: 'Official website of the City of Solvang, California. Access city services, pay bills, find meeting agendas, and connect with your local government.',
   keywords: ['Solvang', 'California', 'Danish', 'City Hall', 'Municipal', 'Government'],
+  openGraph: {
+    title: 'City of Solvang',
+    description: 'The Danish Capital of America - Official City Website',
+    siteName: 'City of Solvang',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'City of Solvang',
+    description: 'The Danish Capital of America - Official City Website',
+  },
 }
 
 export default function RootLayout({
