@@ -20,13 +20,13 @@ interface NavItem {
 const navigation: NavItem[] = [
   {
     name: 'How To',
-    href: '/how-do-i',
+    href: '/how-to',
     submenu: [
-      { name: 'Apply for a Permit', href: '/how-do-i#apply-for' },
-      { name: 'Pay Utility Bill', href: '/how-do-i#make-a-payment' },
-      { name: 'Report a Concern', href: '/how-do-i#submit-a-request' },
-      { name: 'Public Records Request', href: '/how-do-i#submit-a-request' },
-      { name: 'Sign Up for Alerts', href: '/how-do-i#sign-up' },
+      { name: 'Apply for a Permit', href: '/how-to#apply-for' },
+      { name: 'Pay Utility Bill', href: '/how-to#make-a-payment' },
+      { name: 'Report a Concern', href: '/how-to#submit-a-request' },
+      { name: 'Public Records Request', href: '/how-to#submit-a-request' },
+      { name: 'Sign Up for Alerts', href: '/how-to#sign-up' },
     ],
   },
   {
