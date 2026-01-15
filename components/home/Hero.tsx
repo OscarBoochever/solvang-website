@@ -39,7 +39,7 @@ export default function Hero() {
 
           {/* Description */}
           <p className="text-lg text-navy-300 mb-8 max-w-2xl">
-            <Translated>Nestled in California's Santa Ynez Valley, Solvang offers a unique blend of Danish heritage and modern municipal services. Find everything you need to connect with your city government.</Translated>
+            <Translated>Nestled in California&apos;s Santa Ynez Valley, Solvang offers a unique blend of Danish heritage and modern municipal services. Find everything you need to connect with your city government.</Translated>
           </p>
 
           {/* CTA Buttons */}

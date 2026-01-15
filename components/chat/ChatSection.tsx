@@ -93,7 +93,7 @@ export default function ChatSection() {
                     </svg>
                   </div>
                   <p className="text-gray-600 mb-4">
-                    <Translated>Hi! I'm here to help you find information about City of Solvang services.</Translated>
+                    <Translated>Hi! I&apos;m here to help you find information about City of Solvang services.</Translated>
                   </p>
                   <p className="text-sm text-gray-500 mb-4"><Translated>Try asking:</Translated></p>
                   <div className="flex flex-wrap justify-center gap-2">
