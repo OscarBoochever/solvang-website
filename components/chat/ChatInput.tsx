@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, KeyboardEvent } from 'react'
+import { useState } from 'react'
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -17,27 +17,22 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
     }
   }
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
-  }
-
   return (
-    <div className="flex gap-2 items-center">
-      <div className="flex-grow relative">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Ask about city services..."
-          disabled={disabled}
-          rows={1}
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
-          style={{ minHeight: '48px', maxHeight: '120px' }}
-        />
-      </div>
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault()
+            handleSend()
+          }
+        }}
+        placeholder="Ask about city services..."
+        disabled={disabled}
+        className="flex-1 h-12 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+      />
       <button
         onClick={handleSend}
         disabled={disabled || !input.trim()}
