@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getDepartmentBySlug, getDepartments } from '@/lib/contentful'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS } from '@contentful/rich-text-types'
+import Translated from '@/components/Translated'
 
 export const revalidate = 60
 
@@ -14,8 +15,9 @@ export async function generateStaticParams() {
   }))
 }
 
-// Rich text rendering options
+// Rich text rendering options with translation support
 const richTextOptions = {
+  renderText: (text: string) => <Translated>{text}</Translated>,
   renderNode: {
     [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
       <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
@@ -56,21 +58,21 @@ export default async function DepartmentPage({
         <nav className="text-sm mb-6">
           <ol className="flex items-center gap-2 text-gray-500">
             <li>
-              <Link href="/" className="hover:text-navy-600">Home</Link>
+              <Link href="/" className="hover:text-navy-600"><Translated>Home</Translated></Link>
             </li>
             <li>/</li>
             <li>
-              <Link href="/departments" className="hover:text-navy-600">Departments</Link>
+              <Link href="/departments" className="hover:text-navy-600"><Translated>Departments</Translated></Link>
             </li>
             <li>/</li>
-            <li className="text-navy-800 font-medium">{fields.name}</li>
+            <li className="text-navy-800 font-medium"><Translated>{fields.name}</Translated></li>
           </ol>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <h1 className="text-3xl font-bold text-navy-800 mb-4">{fields.name}</h1>
+            <h1 className="text-3xl font-bold text-navy-800 mb-4"><Translated>{fields.name}</Translated></h1>
 
             {fields.description && (
               <div className="text-lg text-gray-600 mb-6 pb-6 border-b">
@@ -88,19 +90,19 @@ export default async function DepartmentPage({
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-gray-50 rounded-xl p-6 sticky top-24">
-              <h2 className="font-semibold text-navy-800 mb-4">Contact Information</h2>
+              <h2 className="font-semibold text-navy-800 mb-4"><Translated>Contact Information</Translated></h2>
 
               <div className="space-y-4 text-sm">
                 {fields.address && (
                   <div>
-                    <div className="font-medium text-gray-700 mb-1">Address</div>
-                    <p className="text-gray-600">{fields.address}</p>
+                    <div className="font-medium text-gray-700 mb-1"><Translated>Address</Translated></div>
+                    <p className="text-gray-600"><Translated>{fields.address}</Translated></p>
                   </div>
                 )}
 
                 {fields.phone && (
                   <div>
-                    <div className="font-medium text-gray-700 mb-1">Phone</div>
+                    <div className="font-medium text-gray-700 mb-1"><Translated>Phone</Translated></div>
                     <a
                       href={`tel:${fields.phone.replace(/\D/g, '')}`}
                       className="text-navy-600 hover:text-navy-800"
@@ -112,7 +114,7 @@ export default async function DepartmentPage({
 
                 {fields.email && (
                   <div>
-                    <div className="font-medium text-gray-700 mb-1">Email</div>
+                    <div className="font-medium text-gray-700 mb-1"><Translated>Email</Translated></div>
                     <a
                       href={`mailto:${fields.email}`}
                       className="text-navy-600 hover:text-navy-800 break-all"
@@ -123,8 +125,8 @@ export default async function DepartmentPage({
                 )}
 
                 <div className="pt-4 border-t">
-                  <div className="font-medium text-gray-700 mb-1">Hours</div>
-                  <p className="text-gray-600">Monday - Friday</p>
+                  <div className="font-medium text-gray-700 mb-1"><Translated>Hours</Translated></div>
+                  <p className="text-gray-600"><Translated>Monday - Friday</Translated></p>
                   <p className="text-gray-600">8:00 AM - 5:00 PM</p>
                 </div>
               </div>

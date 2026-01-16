@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPageBySlug, getPages } from '@/lib/contentful'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS } from '@contentful/rich-text-types'
+import Translated from '@/components/Translated'
 
 export const revalidate = 60
 
@@ -14,8 +15,9 @@ export async function generateStaticParams() {
   }))
 }
 
-// Rich text rendering options
+// Rich text rendering options with translation support
 const richTextOptions = {
+  renderText: (text: string) => <Translated>{text}</Translated>,
   renderNode: {
     [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
       <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
@@ -56,15 +58,15 @@ export default async function GenericPage({
         <nav className="text-sm mb-6">
           <ol className="flex items-center gap-2 text-gray-500">
             <li>
-              <Link href="/" className="hover:text-navy-600">Home</Link>
+              <Link href="/" className="hover:text-navy-600"><Translated>Home</Translated></Link>
             </li>
             <li>/</li>
-            <li className="text-navy-800 font-medium">{fields.title}</li>
+            <li className="text-navy-800 font-medium"><Translated>{fields.title}</Translated></li>
           </ol>
         </nav>
 
         <div className="max-w-3xl">
-          <h1 className="text-3xl font-bold text-navy-800 mb-6">{fields.title}</h1>
+          <h1 className="text-3xl font-bold text-navy-800 mb-6"><Translated>{fields.title}</Translated></h1>
 
           {fields.content && (
             <div className="prose prose-navy max-w-none">

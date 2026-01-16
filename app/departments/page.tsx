@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getDepartments } from '@/lib/contentful'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import Translated from '@/components/Translated'
 
 export const revalidate = 60 // Revalidate every 60 seconds
 
@@ -10,9 +11,9 @@ export default async function DepartmentsPage() {
   return (
     <main className="py-12">
       <div className="container-narrow">
-        <h1 className="text-3xl font-bold text-navy-800 mb-2">City Departments</h1>
+        <h1 className="text-3xl font-bold text-navy-800 mb-2"><Translated>City Departments</Translated></h1>
         <p className="text-gray-600 mb-8">
-          Find information about Solvang&apos;s city departments and services.
+          <Translated>Find information about Solvang&apos;s city departments and services.</Translated>
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -29,25 +30,25 @@ export default async function DepartmentsPage() {
                 className="card p-6 hover:shadow-lg transition-shadow group"
               >
                 <h2 className="text-xl font-semibold text-navy-800 group-hover:text-navy-600 transition-colors mb-2">
-                  {fields.name}
+                  <Translated>{fields.name}</Translated>
                 </h2>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {description}
+                  <Translated>{description}</Translated>
                 </p>
                 <div className="text-sm text-gray-500 space-y-1">
                   {fields.phone && (
                     <p>
-                      <span className="font-medium">Phone:</span> {fields.phone}
+                      <span className="font-medium"><Translated>Phone</Translated>:</span> {fields.phone}
                     </p>
                   )}
                   {fields.email && (
                     <p>
-                      <span className="font-medium">Email:</span> {fields.email}
+                      <span className="font-medium"><Translated>Email</Translated>:</span> {fields.email}
                     </p>
                   )}
                 </div>
                 <span className="inline-flex items-center text-navy-600 text-sm font-medium mt-4 group-hover:gap-2 transition-all">
-                  Learn more
+                  <Translated>Learn more</Translated>
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { getNews } from '@/lib/contentful'
+import Translated from '@/components/Translated'
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -24,27 +25,27 @@ function getCategoryColor(category: string) {
   }
 }
 
-// Unique images for each news item by slug
-const newsImages: Record<string, string> = {
-  'christmas-decoration-winners-2025': 'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=800&q=80', // Christmas decorations
-  'nyborg-estates-water-project-update': 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80', // Construction/pipes
-  'winter-spring-recreation-2026': 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80', // Fitness/recreation
-  'human-services-grants-2026': 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&q=80', // Helping hands
-  'tmac-applications-2026': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80', // Committee meeting
-  'polar-bear-plunge-2026': 'https://images.unsplash.com/photo-1551524559-8af4e6624178?w=800&q=80', // Swimming/lake
-  'water-conservation-reminder': 'https://images.unsplash.com/photo-1468421870903-4df1664ac249?w=800&q=80', // Water droplet
-  'grant-funding-extended': 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80', // Documents/paperwork
+// Logo placeholder component for news without images
+function LogoPlaceholder() {
+  return (
+    <div className="h-40 bg-white flex items-center justify-center">
+      <div className="w-16 h-16 bg-navy-100 rounded-full flex items-center justify-center">
+        <svg viewBox="0 0 24 24" fill="none" className="w-10 h-10 text-navy-600" stroke="currentColor" strokeWidth="1.5">
+          <path d="M4 4l5 5M15 15l5 5M20 4l-5 5M9 15l-5 5" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      </div>
+    </div>
+  )
 }
 
-// Fallback images for items not in the map
-const fallbackImages = [
-  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80',
-  'https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?w=800&q=80',
-  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80',
-]
-
-function getNewsImage(slug: string, index: number = 0): string {
-  return newsImages[slug] || fallbackImages[index % fallbackImages.length]
+function getImageUrl(item: any): string | null {
+  // Use uploaded image if available
+  const image = item.fields?.image
+  if (image?.fields?.file?.url) {
+    return `https:${image.fields.file.url}`
+  }
+  return null
 }
 
 export default async function NewsSectionCMS() {
@@ -53,12 +54,14 @@ export default async function NewsSectionCMS() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-navy-800">Latest News</h2>
+        <h2 className="text-2xl font-bold text-navy-800">
+          <Translated>Latest News</Translated>
+        </h2>
         <Link
           href="/news"
           className="text-navy-600 hover:text-navy-800 font-medium text-sm flex items-center gap-1 transition-colors"
         >
-          View All
+          <Translated>View All</Translated>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -66,36 +69,41 @@ export default async function NewsSectionCMS() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {news.map((item: any, index: number) => {
+        {news.map((item: any) => {
           const fields = item.fields
+          const imageUrl = getImageUrl(item)
 
           return (
             <article key={item.sys.id} className="card group overflow-hidden">
-              <div className="h-40 relative">
-                <Image
-                  src={getNewsImage(fields.slug || '', index)}
-                  alt={fields.title || 'News image'}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
+              {imageUrl ? (
+                <div className="h-40 relative">
+                  <Image
+                    src={imageUrl}
+                    alt={fields.title || 'News image'}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ) : (
+                <LogoPlaceholder />
+              )}
 
               <div className="p-4">
                 {fields.category && (
                   <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${getCategoryColor(fields.category)} mb-2`}>
-                    {fields.category}
+                    <Translated>{fields.category}</Translated>
                   </span>
                 )}
 
                 <h3 className="font-semibold text-navy-800 group-hover:text-navy-600 transition-colors mb-2 line-clamp-2">
                   <Link href={`/news/${fields.slug}`}>
-                    {fields.title}
+                    <Translated>{fields.title}</Translated>
                   </Link>
                 </h3>
 
                 {fields.excerpt && (
                   <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                    {fields.excerpt}
+                    <Translated>{fields.excerpt}</Translated>
                   </p>
                 )}
 

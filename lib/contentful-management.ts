@@ -88,3 +88,50 @@ export async function deleteEntry(entryId: string) {
 
   return entry.delete()
 }
+
+// Upload an asset (image)
+export async function uploadAsset(file: Buffer, fileName: string, contentType: string) {
+  const environment = await getEnvironment()
+
+  // Create the asset
+  const asset = await environment.createAssetFromFiles({
+    fields: {
+      title: { 'en-US': fileName },
+      file: {
+        'en-US': {
+          contentType,
+          fileName,
+          file,
+        },
+      },
+    },
+  })
+
+  // Process and publish the asset
+  const processedAsset = await asset.processForAllLocales()
+
+  // Wait for processing to complete
+  let publishedAsset = processedAsset
+  let attempts = 0
+  while (attempts < 10) {
+    try {
+      publishedAsset = await processedAsset.publish()
+      break
+    } catch (e: any) {
+      if (e.message?.includes('still processing')) {
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        attempts++
+      } else {
+        throw e
+      }
+    }
+  }
+
+  return publishedAsset
+}
+
+// Get an asset
+export async function getAsset(assetId: string) {
+  const environment = await getEnvironment()
+  return environment.getAsset(assetId)
+}

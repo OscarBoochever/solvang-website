@@ -54,6 +54,7 @@ export default function AdminNews() {
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Title</th>
+                <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Status</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Category</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Date</th>
                 <th className="text-right px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
@@ -62,9 +63,35 @@ export default function AdminNews() {
             <tbody className="divide-y">
               {entries.map((entry) => {
                 const fields = entry.fields
+                const rawStatus = fields.status?.['en-US'] || 'published'
+                const scheduledDate = fields.scheduledPublish?.['en-US']
+                // Determine effective status - if scheduled and time has passed, it's effectively published
+                const isScheduledAndPast = rawStatus === 'scheduled' && scheduledDate && new Date(scheduledDate) <= new Date()
+                const effectiveStatus = isScheduledAndPast ? 'published' : rawStatus
+                const isNotPublished = effectiveStatus !== 'published'
                 return (
-                  <tr key={entry.sys.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4"><div className="font-medium text-gray-800">{fields.title?.['en-US']}</div></td>
+                  <tr key={entry.sys.id} className={`hover:bg-gray-50 ${isNotPublished ? 'opacity-60' : ''}`}>
+                    <td className="px-6 py-4"><div className={`font-medium ${isNotPublished ? 'text-gray-500' : 'text-gray-800'}`}>{fields.title?.['en-US']}</div></td>
+                    <td className="px-6 py-4">
+                      {effectiveStatus === 'draft' && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">Draft</span>
+                      )}
+                      {effectiveStatus === 'scheduled' && (
+                        <div>
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gold-100 text-gold-700">
+                            Scheduled
+                          </span>
+                          {scheduledDate && (
+                            <div className="text-xs text-gold-600 mt-1">
+                              {new Date(scheduledDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(scheduledDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' })} PT
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {effectiveStatus === 'published' && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Published</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-sm text-gray-500">{fields.category?.['en-US']}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">{fields.publishDate?.['en-US']}</td>
                     <td className="px-6 py-4 text-right">

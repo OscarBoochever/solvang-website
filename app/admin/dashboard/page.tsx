@@ -120,10 +120,13 @@ export default function AdminDashboard() {
 
         {/* Content Type Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {contentTypes.map((type) => (
+          {contentTypes.map((type) => {
+            // Handle plural forms correctly (news stays news, not newss)
+            const plural = type.id === 'news' ? 'news' : `${type.id}s`
+            return (
             <Link
               key={type.id}
-              href={`/admin/${type.id}s`}
+              href={`/admin/${plural}`}
               className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow group"
             >
               <div className={`w-14 h-14 ${type.color} rounded-xl flex items-center justify-center mb-4`}>
@@ -134,7 +137,8 @@ export default function AdminDashboard() {
               </h3>
               <p className="text-sm text-gray-500 mt-1">{type.description}</p>
             </Link>
-          ))}
+            )
+          })}
         </div>
 
         {/* Quick Tips */}
@@ -152,6 +156,10 @@ export default function AdminDashboard() {
             <li className="flex items-start gap-2">
               <span className="text-emerald-500 mt-0.5">✓</span>
               Use the &quot;View Site&quot; link to preview your changes.
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-emerald-500 mt-0.5">✓</span>
+              Schedule content to appear later by setting status to &quot;Scheduled&quot; and choosing a date/time.
             </li>
           </ul>
         </div>

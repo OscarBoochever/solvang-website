@@ -37,6 +37,25 @@ export async function POST(request: NextRequest) {
   try {
     const { contentType, fields, richTextFields = [] } = await request.json()
 
+    // Combine scheduledDate and scheduledTime into scheduledPublish ISO string
+    // Use Pacific time (Solvang, CA timezone) for scheduling
+    if (fields.scheduledDate && fields.scheduledTime) {
+      const dateTimeStr = `${fields.scheduledDate}T${fields.scheduledTime}:00`
+      // Parse input as Pacific time and convert to UTC
+      const targetDate = new Date(dateTimeStr)
+      const pacificTime = new Date(targetDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }))
+      const offset = targetDate.getTime() - pacificTime.getTime()
+      const utcDateTime = new Date(targetDate.getTime() + offset)
+      fields.scheduledPublish = utcDateTime.toISOString()
+    }
+    // Remove the separate date/time fields
+    delete fields.scheduledDate
+    delete fields.scheduledTime
+
+    // Handle image asset link
+    const imageAssetId = fields.imageAssetId
+    delete fields.imageAssetId
+
     // Convert specified fields to rich text, skip empty fields
     const processedFields: Record<string, any> = {}
     Object.keys(fields).forEach(key => {
@@ -52,9 +71,22 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    // Add image link if provided
+    if (imageAssetId) {
+      processedFields.image = {
+        'en-US': {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: imageAssetId
+          }
+        }
+      }
+    }
+
     const entry = await createEntry(contentType, processedFields)
 
-    // Auto-publish
+    // Always publish to Contentful (visibility is controlled by status field)
     await entry.publish()
 
     return NextResponse.json({ entry, success: true })

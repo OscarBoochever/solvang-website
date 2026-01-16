@@ -40,6 +40,28 @@ export async function PUT(
     const { id } = await params
     const { fields, richTextFields = [] } = await request.json()
 
+    // Combine scheduledDate and scheduledTime into scheduledPublish ISO string
+    // Use Pacific time (Solvang, CA timezone) for scheduling
+    if (fields.scheduledDate && fields.scheduledTime) {
+      const dateTimeStr = `${fields.scheduledDate}T${fields.scheduledTime}:00`
+      // Parse input as Pacific time and convert to UTC
+      const targetDate = new Date(dateTimeStr)
+      const pacificTime = new Date(targetDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }))
+      const offset = targetDate.getTime() - pacificTime.getTime()
+      const utcDateTime = new Date(targetDate.getTime() + offset)
+      fields.scheduledPublish = utcDateTime.toISOString()
+    } else if (!fields.scheduledDate) {
+      // Clear scheduledPublish if no date is set
+      fields.scheduledPublish = ''
+    }
+    // Remove the separate date/time fields
+    delete fields.scheduledDate
+    delete fields.scheduledTime
+
+    // Handle image asset link
+    const imageAssetId = fields.imageAssetId
+    delete fields.imageAssetId
+
     // Convert specified fields to rich text, handle empty values
     const processedFields: Record<string, any> = {}
     Object.keys(fields).forEach(key => {
@@ -56,9 +78,25 @@ export async function PUT(
       }
     })
 
+    // Add or update image link
+    if (imageAssetId) {
+      processedFields.image = {
+        'en-US': {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: imageAssetId
+          }
+        }
+      }
+    } else if (imageAssetId === null) {
+      // Remove image if explicitly set to null
+      processedFields.image = { 'en-US': null }
+    }
+
     const entry = await updateEntry(id, processedFields)
 
-    // Re-publish after update
+    // Always re-publish to Contentful (visibility is controlled by status field)
     await publishEntry(id)
 
     return NextResponse.json({ entry, success: true })

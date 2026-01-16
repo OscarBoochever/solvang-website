@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Translated from '@/components/Translated'
 
 interface CalendarEvent {
   id: string
@@ -33,7 +34,6 @@ export default function CalendarView({ events }: CalendarViewProps) {
   // Navigate months
   const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1))
   const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1))
-  const goToToday = () => setCurrentDate(new Date())
 
   // Get events for a specific day
   const getEventsForDay = (day: number) => {
@@ -75,12 +75,6 @@ export default function CalendarView({ events }: CalendarViewProps) {
 
             <div className="text-center">
               <h2 className="text-xl font-semibold">{monthName}</h2>
-              <button
-                onClick={goToToday}
-                className="text-xs text-white/70 hover:text-white transition-colors"
-              >
-                Go to Today
-              </button>
             </div>
 
             <button
@@ -155,15 +149,15 @@ export default function CalendarView({ events }: CalendarViewProps) {
         <div className="mt-4 flex items-center gap-6 text-sm text-gray-600">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-navy-100 rounded" />
-            <span>Meeting</span>
+            <span><Translated>Meeting</Translated></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-emerald-100 rounded" />
-            <span>Special Event</span>
+            <span><Translated>Special Event</Translated></span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-gold-50 border border-gold-200 rounded" />
-            <span>Today</span>
+            <span><Translated>Today</Translated></span>
           </div>
         </div>
       </div>
@@ -179,7 +173,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
                     ? 'bg-emerald-100 text-emerald-700'
                     : 'bg-navy-100 text-navy-700'
                 }`}>
-                  {selectedEvent.eventType === 'event' ? 'Special Event' : 'Meeting'}
+                  {selectedEvent.eventType === 'event' ? <Translated>Special Event</Translated> : <Translated>Meeting</Translated>}
                 </span>
                 <button
                   onClick={() => setSelectedEvent(null)}
@@ -192,7 +186,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
               </div>
 
               <h3 className="text-xl font-semibold text-navy-800 mb-4">
-                {selectedEvent.title}
+                <Translated>{selectedEvent.title}</Translated>
               </h3>
 
               <div className="space-y-3 text-sm">
@@ -201,7 +195,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <div>
-                    <div className="font-medium text-gray-700">Date</div>
+                    <div className="font-medium text-gray-700"><Translated>Date</Translated></div>
                     <div className="text-gray-600">
                       {new Date(selectedEvent.date).toLocaleDateString('en-US', {
                         weekday: 'long',
@@ -219,7 +213,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div>
-                      <div className="font-medium text-gray-700">Time</div>
+                      <div className="font-medium text-gray-700"><Translated>Time</Translated></div>
                       <div className="text-gray-600">{selectedEvent.time}</div>
                     </div>
                   </div>
@@ -232,16 +226,16 @@ export default function CalendarView({ events }: CalendarViewProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <div>
-                      <div className="font-medium text-gray-700">Location</div>
-                      <div className="text-gray-600">{selectedEvent.location}</div>
+                      <div className="font-medium text-gray-700"><Translated>Location</Translated></div>
+                      <div className="text-gray-600"><Translated>{selectedEvent.location}</Translated></div>
                     </div>
                   </div>
                 )}
 
                 {selectedEvent.description && (
                   <div className="pt-3 border-t">
-                    <div className="font-medium text-gray-700 mb-2">Details</div>
-                    <p className="text-gray-600">{selectedEvent.description}</p>
+                    <div className="font-medium text-gray-700 mb-2"><Translated>Details</Translated></div>
+                    <p className="text-gray-600"><Translated>{selectedEvent.description}</Translated></p>
                   </div>
                 )}
               </div>
@@ -251,7 +245,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
               <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p>Click an event to see details</p>
+              <p><Translated>Click an event to see details</Translated></p>
             </div>
           )}
         </div>

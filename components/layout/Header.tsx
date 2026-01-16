@@ -208,7 +208,7 @@ export default function Header() {
                           href={subitem.href}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 hover:text-navy-700 transition-colors"
                         >
-                          {subitem.name}
+                          <Translated>{subitem.name}</Translated>
                         </Link>
                       ))}
                     </div>
@@ -283,7 +283,7 @@ export default function Header() {
                             className="block px-4 py-2 text-sm text-navy-600 font-medium hover:bg-navy-50 rounded-lg"
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            View All
+                            <Translated>View All</Translated>
                           </Link>
                           {item.submenu.map((subitem) => (
                             <Link
@@ -292,7 +292,7 @@ export default function Header() {
                               className="block px-4 py-2 text-sm text-gray-600 hover:text-navy-700 hover:bg-navy-50 rounded-lg"
                               onClick={() => setMobileMenuOpen(false)}
                             >
-                              {subitem.name}
+                              <Translated>{subitem.name}</Translated>
                             </Link>
                           ))}
                         </div>

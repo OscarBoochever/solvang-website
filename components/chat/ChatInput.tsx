@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLanguage } from '@/lib/LanguageContext'
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -9,6 +10,16 @@ interface ChatInputProps {
 
 export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [input, setInput] = useState('')
+  const [placeholder, setPlaceholder] = useState('Ask about city services...')
+  const { language, translate } = useLanguage()
+
+  useEffect(() => {
+    if (language === 'en') {
+      setPlaceholder('Ask about city services...')
+      return
+    }
+    translate('Ask about city services...').then(setPlaceholder)
+  }, [language, translate])
 
   const handleSend = () => {
     if (input.trim() && !disabled) {
@@ -29,7 +40,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
             handleSend()
           }
         }}
-        placeholder="Ask about city services..."
+        placeholder={placeholder}
         disabled={disabled}
         className="flex-1 h-12 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
       />

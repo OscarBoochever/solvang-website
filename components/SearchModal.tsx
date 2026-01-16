@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/LanguageContext'
+import Translated from '@/components/Translated'
 
 interface SearchResult {
   id: string
@@ -27,9 +29,20 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [searchPlaceholder, setSearchPlaceholder] = useState('Search...')
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const debounceRef = useRef<NodeJS.Timeout>()
+  const { language, translate } = useLanguage()
+
+  // Translate placeholder
+  useEffect(() => {
+    if (language === 'en') {
+      setSearchPlaceholder('Search...')
+      return
+    }
+    translate('Search...').then(setSearchPlaceholder)
+  }, [language, translate])
 
   // Focus input when opened
   useEffect(() => {
@@ -111,7 +124,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
         <input
           ref={inputRef}
           type="search"
-          placeholder="Search..."
+          placeholder={searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoComplete="off"
@@ -127,7 +140,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
         <div className="max-h-64 overflow-y-auto">
           {results.length === 0 && !isLoading ? (
             <div className="p-4 text-center text-sm text-gray-500">
-              No results found
+              <Translated>No results found</Translated>
             </div>
           ) : (
             <div className="divide-y">
@@ -143,7 +156,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${typeInfo.color}`}>
-                          {typeInfo.label}
+                          <Translated>{typeInfo.label}</Translated>
                         </span>
                         <span className="text-sm font-medium text-navy-800 truncate">
                           {result.title}

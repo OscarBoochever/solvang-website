@@ -80,7 +80,8 @@ export async function getPages(preview = false) {
   const response = await getClient(preview).getEntries({
     content_type: 'page',
   })
-  return response.items
+  // Filter by status (published or scheduled with time passed)
+  return response.items.filter(isContentVisible)
 }
 
 // Fetch single page by slug
@@ -90,17 +91,37 @@ export async function getPageBySlug(slug: string, preview = false) {
     'fields.slug': slug,
     limit: 1,
   })
-  return response.items[0] || null
+  const item = response.items[0]
+  if (!item || !isContentVisible(item)) return null
+  return item
+}
+
+// Helper to check if content should be visible based on status
+function isContentVisible(item: any): boolean {
+  const status = item.fields?.status || 'published'
+  if (status === 'published') return true
+  if (status === 'draft') return false
+  if (status === 'scheduled') {
+    const scheduledPublish = item.fields?.scheduledPublish
+    if (!scheduledPublish) return false
+    return new Date(scheduledPublish) <= new Date()
+  }
+  return true // Default to visible for backwards compatibility
 }
 
 // Fetch all news articles
 export async function getNews(limit?: number, preview = false) {
+  // Fetch more than needed to account for filtering out scheduled/draft items
+  const fetchLimit = limit ? limit * 3 : 100
   const response = await getClient(preview).getEntries({
     content_type: 'news',
-    order: ['-fields.publishDate'],
-    limit: limit || 100,
+    order: ['-fields.publishDate', '-sys.createdAt'],
+    limit: fetchLimit,
   })
-  return response.items
+  // Filter by status (published or scheduled with time passed)
+  const visibleItems = response.items.filter(isContentVisible)
+  // Return only the requested number of items
+  return limit ? visibleItems.slice(0, limit) : visibleItems
 }
 
 // Fetch single news article by slug
@@ -110,7 +131,9 @@ export async function getNewsBySlug(slug: string, preview = false) {
     'fields.slug': slug,
     limit: 1,
   })
-  return response.items[0] || null
+  const item = response.items[0]
+  if (!item || !isContentVisible(item)) return null
+  return item
 }
 
 // Fetch all events
@@ -119,19 +142,25 @@ export async function getEvents(preview = false) {
     content_type: 'event',
     order: ['fields.date'],
   })
-  return response.items
+  // Filter by status (published or scheduled with time passed)
+  return response.items.filter(isContentVisible)
 }
 
 // Fetch upcoming events (from today onwards)
 export async function getUpcomingEvents(limit?: number, preview = false) {
   const today = new Date().toISOString().split('T')[0]
+  // Fetch more than needed to account for filtering out scheduled/draft items
+  const fetchLimit = limit ? limit * 3 : 30
   const response = await getClient(preview).getEntries({
     content_type: 'event',
     'fields.date[gte]': today,
     order: ['fields.date'],
-    limit: limit || 10,
+    limit: fetchLimit,
   })
-  return response.items
+  // Filter by status (published or scheduled with time passed)
+  const visibleItems = response.items.filter(isContentVisible)
+  // Return only the requested number of items
+  return limit ? visibleItems.slice(0, limit) : visibleItems
 }
 
 // Get all content for chatbot knowledge base

@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react'
 
 export const languages = [
   { code: 'en', name: 'English' },
@@ -28,49 +28,99 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
+// Storage key for localStorage
+const CACHE_KEY = 'solvang-translation-cache'
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState('en')
   const [cache, setCache] = useState<TranslationCache>({})
   const [isTranslating, setIsTranslating] = useState(false)
 
+  // Track pending requests to avoid duplicate API calls
+  const pendingRequests = useRef<Map<string, Promise<string>>>(new Map())
+
+  // Load cache from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CACHE_KEY)
+      if (saved) {
+        setCache(JSON.parse(saved))
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [])
+
+  // Save cache to localStorage when it changes
+  useEffect(() => {
+    if (Object.keys(cache).length > 0) {
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+      } catch {
+        // Ignore localStorage errors
+      }
+    }
+  }, [cache])
+
   const translate = useCallback(async (text: string): Promise<string> => {
     // If English, return original text
     if (language === 'en') return text
+
+    // Skip empty strings
+    if (!text || !text.trim()) return text
 
     // Check cache first
     if (cache[text]?.[language]) {
       return cache[text][language]
     }
 
-    try {
-      setIsTranslating(true)
-      const response = await fetch('/api/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, targetLang: language }),
-      })
+    // Create a unique key for this request
+    const requestKey = `${text}:${language}`
 
-      const data = await response.json()
-
-      if (data.translatedText) {
-        // Update cache
-        setCache(prev => ({
-          ...prev,
-          [text]: {
-            ...prev[text],
-            [language]: data.translatedText
-          }
-        }))
-        return data.translatedText
-      }
-
-      return text
-    } catch (error) {
-      console.error('Translation error:', error)
-      return text
-    } finally {
-      setIsTranslating(false)
+    // Check if there's already a pending request for this text
+    if (pendingRequests.current.has(requestKey)) {
+      return pendingRequests.current.get(requestKey)!
     }
+
+    // Create the request promise
+    const requestPromise = (async () => {
+      try {
+        setIsTranslating(true)
+        const response = await fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, targetLang: language }),
+        })
+
+        const data = await response.json()
+
+        if (data.translatedText) {
+          // Update cache
+          setCache(prev => ({
+            ...prev,
+            [text]: {
+              ...prev[text],
+              [language]: data.translatedText
+            }
+          }))
+          return data.translatedText
+        }
+
+        return text
+      } catch (error) {
+        console.error('Translation error:', error)
+        return text
+      } finally {
+        setIsTranslating(false)
+        // Remove from pending requests
+        pendingRequests.current.delete(requestKey)
+      }
+    })()
+
+    // Store the pending request
+    pendingRequests.current.set(requestKey, requestPromise)
+
+    return requestPromise
   }, [language, cache])
 
   return (

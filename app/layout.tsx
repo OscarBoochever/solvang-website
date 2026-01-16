@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Providers from '@/components/Providers'
+import AccessibilityToolbar from '@/components/AccessibilityToolbar'
 
 export const metadata: Metadata = {
   title: 'City of Solvang - The Danish Capital of America',
@@ -43,6 +44,9 @@ export default function RootLayout({
           </main>
 
           <Footer />
+
+          {/* Accessibility Toolbar - WCAG 2.2 AA Compliance */}
+          <AccessibilityToolbar />
         </Providers>
       </body>
     </html>

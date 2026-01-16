@@ -1,12 +1,14 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Translated from '@/components/Translated'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const quickLinks: { name: string; href: string; external?: boolean }[] = [
   { name: 'Home', href: '/' },
   { name: 'Contact Us', href: '/contact' },
-  { name: 'Find My Voting District', href: 'https://districtssolvang.org', external: true },
+  { name: 'Find My Voting District', href: 'https://districtsolvang.org', external: true },
   { name: 'Accessibility', href: '/accessibility' },
   { name: 'Privacy Policy', href: '/privacy' },
 ]
@@ -22,6 +24,17 @@ const departments = [
 ]
 
 export default function Footer() {
+  const { language, translate } = useLanguage()
+  const [emailPlaceholder, setEmailPlaceholder] = useState('Your email address')
+
+  useEffect(() => {
+    if (language === 'en') {
+      setEmailPlaceholder('Your email address')
+      return
+    }
+    translate('Your email address').then(setEmailPlaceholder)
+  }, [language, translate])
+
   return (
     <footer className="bg-gray-100 border-t">
       <div className="container-narrow py-12">
@@ -136,12 +149,12 @@ export default function Footer() {
             </p>
             <form className="flex gap-2">
               <label htmlFor="email-signup" className="sr-only">
-                Email address
+                <Translated>Email address</Translated>
               </label>
               <input
                 type="email"
                 id="email-signup"
-                placeholder="Your email address"
+                placeholder={emailPlaceholder}
                 className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
               />
               <button
