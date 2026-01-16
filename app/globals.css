@@ -685,3 +685,104 @@ body.high-contrast [class*="text-white"] {
 body.high-contrast [class*="text-navy-800"] {
   color: #ffffff !important;
 }
+
+/* ==========================================
+   ADMIN PAGE HIGH CONTRAST STYLES
+   ========================================== */
+
+/* Admin page backgrounds */
+body.high-contrast [class*="bg-gray-100"] {
+  background-color: #000000 !important;
+}
+
+/* Admin cards and containers */
+body.high-contrast .rounded-xl {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* Admin card titles and text */
+body.high-contrast [class*="text-gray-800"],
+body.high-contrast [class*="text-gray-700"] {
+  color: #ffffff !important;
+}
+
+/* Table headers */
+body.high-contrast thead,
+body.high-contrast [class*="bg-gray-50"] {
+  background-color: #1a1a1a !important;
+}
+
+/* Table rows */
+body.high-contrast tbody tr {
+  border-color: #ffffff !important;
+}
+
+body.high-contrast tbody tr:hover {
+  background-color: #1a1a1a !important;
+}
+
+/* Edit and action links in admin */
+body.high-contrast [class*="text-navy-600"] {
+  color: #00ffff !important;
+}
+
+body.high-contrast [class*="text-red-600"] {
+  color: #ff6b6b !important;
+}
+
+/* Scheduling section */
+body.high-contrast [class*="bg-gold-50"] {
+  background-color: #1a1a00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast [class*="text-gold-800"],
+body.high-contrast [class*="text-gold-700"],
+body.high-contrast [class*="text-gold-600"] {
+  color: #ffff00 !important;
+}
+
+body.high-contrast [class*="border-gold-"] {
+  border-color: #ffff00 !important;
+}
+
+/* Form inputs in admin */
+body.high-contrast .rounded-lg {
+  border-color: #ffffff !important;
+}
+
+/* Status badges in admin lists */
+body.high-contrast [class*="bg-emerald-100"] {
+  background-color: #003300 !important;
+  border: 1px solid #00ff00 !important;
+}
+
+body.high-contrast [class*="text-emerald-700"],
+body.high-contrast [class*="text-emerald-500"] {
+  color: #00ff00 !important;
+}
+
+/* Admin header */
+body.high-contrast [class*="bg-navy-800"] {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+/* White/transparent text in admin header */
+body.high-contrast [class*="text-white\\/60"],
+body.high-contrast [class*="text-white\\/80"] {
+  color: #cccccc !important;
+}
+
+/* Admin buttons */
+body.high-contrast [class*="bg-emerald-500"] {
+  background-color: #000000 !important;
+  border: 2px solid #00ff00 !important;
+  color: #00ff00 !important;
+}
+
+body.high-contrast [class*="bg-emerald-500"]:hover {
+  background-color: #00ff00 !important;
+  color: #000000 !important;
+}
