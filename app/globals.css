@@ -686,3 +686,111 @@ body.high-contrast [class*="text-navy-800"] {
   color: #ffffff !important;
 }
 
+/* ==========================================
+   ADMIN PAGE HIGH CONTRAST STYLES
+   Scoped to .admin-pages wrapper
+   ========================================== */
+
+/* Admin page backgrounds */
+body.high-contrast .admin-pages {
+  background-color: #000000 !important;
+}
+
+/* Admin cards and white containers */
+body.high-contrast .admin-pages [class*="bg-white"] {
+  background-color: #000000 !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* Admin gray backgrounds */
+body.high-contrast .admin-pages [class*="bg-gray-100"] {
+  background-color: #000000 !important;
+}
+
+body.high-contrast .admin-pages [class*="bg-gray-50"] {
+  background-color: #1a1a1a !important;
+}
+
+/* Admin text colors */
+body.high-contrast .admin-pages [class*="text-gray-800"],
+body.high-contrast .admin-pages [class*="text-gray-700"],
+body.high-contrast .admin-pages [class*="text-gray-600"],
+body.high-contrast .admin-pages [class*="text-gray-500"] {
+  color: #ffffff !important;
+}
+
+/* Admin links */
+body.high-contrast .admin-pages [class*="text-navy-600"] {
+  color: #00ffff !important;
+}
+
+body.high-contrast .admin-pages [class*="text-red-600"] {
+  color: #ff6b6b !important;
+}
+
+/* Admin scheduling section */
+body.high-contrast .admin-pages [class*="bg-gold-50"] {
+  background-color: #1a1a00 !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast .admin-pages [class*="text-gold-800"],
+body.high-contrast .admin-pages [class*="text-gold-700"],
+body.high-contrast .admin-pages [class*="text-gold-600"] {
+  color: #ffff00 !important;
+}
+
+body.high-contrast .admin-pages [class*="border-gold-"] {
+  border-color: #ffff00 !important;
+}
+
+/* Admin status badges */
+body.high-contrast .admin-pages [class*="bg-emerald-100"] {
+  background-color: #003300 !important;
+  border: 1px solid #00ff00 !important;
+}
+
+body.high-contrast .admin-pages [class*="text-emerald-700"] {
+  color: #00ff00 !important;
+}
+
+/* Admin add buttons */
+body.high-contrast .admin-pages [class*="bg-emerald-500"] {
+  background-color: #000000 !important;
+  border: 2px solid #00ff00 !important;
+  color: #00ff00 !important;
+}
+
+body.high-contrast .admin-pages [class*="bg-emerald-500"]:hover {
+  background-color: #00ff00 !important;
+  color: #000000 !important;
+}
+
+/* Admin form inputs */
+body.high-contrast .admin-pages input,
+body.high-contrast .admin-pages select,
+body.high-contrast .admin-pages textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+/* Admin tables */
+body.high-contrast .admin-pages table {
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast .admin-pages th {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+}
+
+body.high-contrast .admin-pages td {
+  border-bottom: 1px solid #444444 !important;
+}
+
+body.high-contrast .admin-pages tr:hover {
+  background-color: #1a1a1a !important;
+}
+
