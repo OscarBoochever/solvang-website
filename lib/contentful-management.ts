@@ -93,15 +93,19 @@ export async function deleteEntry(entryId: string) {
 export async function uploadAsset(file: Buffer, fileName: string, contentType: string) {
   const environment = await getEnvironment()
 
+  // Convert Buffer to ArrayBuffer for Contentful API
+  const arrayBuffer = file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength) as ArrayBuffer
+
   // Create the asset
   const asset = await environment.createAssetFromFiles({
     fields: {
       title: { 'en-US': fileName },
+      description: { 'en-US': '' },
       file: {
         'en-US': {
           contentType,
           fileName,
-          file,
+          file: arrayBuffer,
         },
       },
     },
