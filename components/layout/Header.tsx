@@ -176,7 +176,7 @@ export default function Header() {
               <div className="text-xl font-bold text-navy-800 group-hover:text-navy-600 transition-colors">
                 <Translated>City of Solvang</Translated>
               </div>
-              <div className="text-xs text-gold-600 font-medium">
+              <div className="text-xs text-gold-700 font-medium">
                 <Translated>The Danish Capital of America</Translated>
               </div>
             </div>

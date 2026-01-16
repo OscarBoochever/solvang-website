@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function AdminLogin() {
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [showDemoUsers, setShowDemoUsers] = useState(false)
   const router = useRouter()
 
   // Check if already logged in
@@ -30,13 +32,15 @@ export default function AdminLogin() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       })
+
+      const data = await res.json()
 
       if (res.ok) {
         router.push('/admin/dashboard')
       } else {
-        setError('Invalid password')
+        setError(data.error || 'Invalid credentials')
       }
     } catch {
       setError('Login failed. Please try again.')
@@ -67,6 +71,22 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+              placeholder="Enter your username"
+              autoComplete="username"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
@@ -76,7 +96,8 @@ export default function AdminLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-              placeholder="Enter admin password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
               required
             />
           </div>
@@ -94,6 +115,45 @@ export default function AdminLogin() {
             Sign In
           </button>
         </form>
+
+        {/* Demo credentials for review */}
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={() => setShowDemoUsers(!showDemoUsers)}
+            className="w-full text-sm text-gray-500 hover:text-gray-700 flex items-center justify-center gap-1"
+          >
+            <span>Demo accounts for testing</span>
+            <svg className={`w-4 h-4 transition-transform ${showDemoUsers ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showDemoUsers && (
+            <div className="mt-4 space-y-2 text-xs">
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="font-semibold text-navy-700">Super Admin</div>
+                <div className="text-gray-600">admin / admin123</div>
+                <div className="text-gray-400">Full access to all features</div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="font-semibold text-navy-700">Administrator</div>
+                <div className="text-gray-600">cityclerk / clerk123</div>
+                <div className="text-gray-400">Can create, edit, delete, publish</div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="font-semibold text-navy-700">Editor</div>
+                <div className="text-gray-600">editor / editor123</div>
+                <div className="text-gray-400">Can create and edit content</div>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="font-semibold text-navy-700">Viewer</div>
+                <div className="text-gray-600">viewer / viewer123</div>
+                <div className="text-gray-400">Read-only access</div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <p className="text-xs text-gray-400 text-center mt-6">
           For employee access only. Contact IT for assistance.

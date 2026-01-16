@@ -113,7 +113,7 @@ export default function CalendarView({ events }: CalendarViewProps) {
                   {day && (
                     <>
                       <div className={`text-sm font-medium mb-1 ${
-                        isToday(day) ? 'text-gold-600' : 'text-gray-700'
+                        isToday(day) ? 'text-gold-700 font-bold' : 'text-gray-700'
                       }`}>
                         {day}
                       </div>

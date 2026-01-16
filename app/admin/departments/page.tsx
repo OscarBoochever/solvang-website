@@ -4,11 +4,20 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { Permission } from '@/lib/auth'
 
 export default function AdminDepartments() {
   const [entries, setEntries] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [permissions, setPermissions] = useState<Permission>({
+    canCreate: false,
+    canEdit: false,
+    canDelete: false,
+    canPublish: false,
+    canManageUsers: false,
+    canViewAnalytics: false,
+  })
   const router = useRouter()
 
   useEffect(() => {
@@ -17,8 +26,14 @@ export default function AdminDepartments() {
         if (!res.ok) {
           router.push('/admin')
         } else {
-          loadEntries()
+          return res.json()
         }
+      })
+      .then(data => {
+        if (data?.user?.permissions) {
+          setPermissions(data.user.permissions)
+        }
+        loadEntries()
       })
       .catch(() => router.push('/admin'))
   }, [router])
@@ -58,12 +73,14 @@ export default function AdminDepartments() {
             </Link>
             <h1 className="font-bold">Departments</h1>
           </div>
-          <Link
-            href="/admin/departments/new"
-            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 rounded-lg text-sm font-medium transition-colors"
-          >
-            + Add Department
-          </Link>
+          {permissions.canCreate && (
+            <Link
+              href="/admin/departments/new"
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 rounded-lg text-sm font-medium transition-colors"
+            >
+              + Add Department
+            </Link>
+          )}
         </div>
       </header>
 
@@ -94,19 +111,23 @@ export default function AdminDepartments() {
                       {fields.phone?.['en-US']}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/admin/departments/${entry.sys.id}`}
-                        className="text-navy-600 hover:text-navy-800 text-sm font-medium mr-4"
-                      >
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(entry.sys.id)}
-                        disabled={deleting === entry.sys.id}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50"
-                      >
-                        {deleting === entry.sys.id ? 'Deleting...' : 'Delete'}
-                      </button>
+                      {permissions.canEdit && (
+                        <Link
+                          href={`/admin/departments/${entry.sys.id}`}
+                          className="text-navy-600 hover:text-navy-800 text-sm font-medium mr-4"
+                        >
+                          Edit
+                        </Link>
+                      )}
+                      {permissions.canDelete && (
+                        <button
+                          onClick={() => handleDelete(entry.sys.id)}
+                          disabled={deleting === entry.sys.id}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50"
+                        >
+                          {deleting === entry.sys.id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 )

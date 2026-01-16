@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.71.2",
     "@contentful/rich-text-plain-text-renderer": "^17.1.6",
     "@contentful/rich-text-react-renderer": "^16.1.6",
+    "@google-analytics/data": "^5.2.1",
     "contentful": "^11.10.2",
     "contentful-management": "^11.67.2",
     "date-fns": "^4.1.0",

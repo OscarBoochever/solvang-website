@@ -2,6 +2,7 @@ import { getEvents } from '@/lib/contentful'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
 import CalendarView from './CalendarView'
 import Translated from '@/components/Translated'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const revalidate = 60
 
@@ -27,6 +28,12 @@ export default async function EventsPage() {
   return (
     <main className="py-12">
       <div className="container-narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Events Calendar' },
+          ]}
+        />
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-navy-800 mb-2"><Translated>Events Calendar</Translated></h1>
           <p className="text-gray-600">

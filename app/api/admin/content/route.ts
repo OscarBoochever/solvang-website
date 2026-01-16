@@ -6,7 +6,15 @@ import { getEntries, createEntry, createRichText } from '@/lib/contentful-manage
 async function isAuthenticated() {
   const cookieStore = await cookies()
   const session = cookieStore.get('admin_session')
-  return session?.value === 'authenticated'
+  if (!session?.value) return false
+  // Support both old format ('authenticated') and new JSON format
+  if (session.value === 'authenticated') return true
+  try {
+    JSON.parse(session.value)
+    return true
+  } catch {
+    return false
+  }
 }
 
 // GET - List all entries of a content type

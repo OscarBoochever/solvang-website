@@ -1,22 +1,60 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Translated from '@/components/Translated'
 
+const heroImages = [
+  {
+    src: '/images/wilderness-city.jpg',
+    alt: 'Scenic view of Solvang nestled in the Santa Ynez Valley',
+  },
+  {
+    src: '/images/storefronts.jpg',
+    alt: 'Danish-style storefronts in downtown Solvang',
+  },
+  {
+    src: '/images/flowers.jpg',
+    alt: 'Beautiful flowers in Solvang',
+  },
+]
+
 export default function Hero() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Auto-advance carousel every 12 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length)
+    }, 12000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section className="relative bg-navy-800 text-white">
-      {/* Background image placeholder - we'll use a gradient for now */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-700"
-        aria-hidden="true"
-      />
+      {/* Background images carousel */}
+      {heroImages.map((image, index) => (
+        <div
+          key={image.src}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentIndex ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            priority={index === 0}
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
+      ))}
 
-      {/* Decorative windmill pattern overlay */}
+      {/* Dark overlay for text readability */}
       <div
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
+        className="absolute inset-0 bg-navy-900/60"
         aria-hidden="true"
       />
 
@@ -33,12 +71,12 @@ export default function Hero() {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-navy-200 mb-6">
+          <p className="text-xl md:text-2xl text-white/90 mb-6">
             <Translated>The Danish Capital of America</Translated>
           </p>
 
           {/* Description */}
-          <p className="text-lg text-navy-300 mb-8 max-w-2xl">
+          <p className="text-lg text-white/80 mb-8 max-w-2xl">
             <Translated>Nestled in California&apos;s Santa Ynez Valley, Solvang offers a unique blend of Danish heritage and modern municipal services. Find everything you need to connect with your city government.</Translated>
           </p>
 
@@ -58,10 +96,11 @@ export default function Hero() {
             </a>
           </div>
         </div>
+
       </div>
 
       {/* Bottom wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute -bottom-px left-0 right-0 pointer-events-none">
         <svg
           viewBox="0 0 1440 120"
           fill="none"

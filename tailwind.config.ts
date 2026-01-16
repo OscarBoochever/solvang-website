@@ -24,6 +24,7 @@ const config: Config = {
         },
         // Accent - Danish Gold
         gold: {
+          700: '#8B6508', // WCAG AA compliant for text on white (4.7:1)
           600: '#b8860b',
           500: '#d69e2e',
           400: '#eab308',

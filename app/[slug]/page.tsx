@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { getPageBySlug, getPages } from '@/lib/contentful'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS } from '@contentful/rich-text-types'
 import Translated from '@/components/Translated'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const revalidate = 60
 
@@ -26,7 +26,10 @@ const richTextOptions = {
       <h2 className="text-2xl font-bold text-navy-800 mt-8 mb-4">{children}</h2>
     ),
     [BLOCKS.HEADING_3]: (node: any, children: any) => (
-      <h3 className="text-xl font-semibold text-navy-800 mt-6 mb-3">{children}</h3>
+      <h2 className="text-xl font-semibold text-navy-800 mt-6 mb-3">{children}</h2>
+    ),
+    [BLOCKS.HEADING_4]: (node: any, children: any) => (
+      <h3 className="text-lg font-semibold text-navy-800 mt-4 mb-2">{children}</h3>
     ),
     [BLOCKS.UL_LIST]: (node: any, children: any) => (
       <ul className="list-disc list-inside mb-4 space-y-2 text-gray-700">{children}</ul>
@@ -54,16 +57,12 @@ export default async function GenericPage({
   return (
     <main className="py-12">
       <div className="container-narrow">
-        {/* Breadcrumb */}
-        <nav className="text-sm mb-6">
-          <ol className="flex items-center gap-2 text-gray-500">
-            <li>
-              <Link href="/" className="hover:text-navy-600"><Translated>Home</Translated></Link>
-            </li>
-            <li>/</li>
-            <li className="text-navy-800 font-medium"><Translated>{fields.title}</Translated></li>
-          </ol>
-        </nav>
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: fields.title },
+          ]}
+        />
 
         <div className="max-w-3xl">
           <h1 className="text-3xl font-bold text-navy-800 mb-6"><Translated>{fields.title}</Translated></h1>

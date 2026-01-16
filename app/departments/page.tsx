@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getDepartments } from '@/lib/contentful'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
 import Translated from '@/components/Translated'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const revalidate = 60 // Revalidate every 60 seconds
 
@@ -11,6 +12,12 @@ export default async function DepartmentsPage() {
   return (
     <main className="py-12">
       <div className="container-narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'City Departments' },
+          ]}
+        />
         <h1 className="text-3xl font-bold text-navy-800 mb-2"><Translated>City Departments</Translated></h1>
         <p className="text-gray-600 mb-8">
           <Translated>Find information about Solvang&apos;s city departments and services.</Translated>

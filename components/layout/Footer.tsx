@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Translated from '@/components/Translated'
-import { useLanguage } from '@/lib/LanguageContext'
 
 const quickLinks: { name: string; href: string; external?: boolean }[] = [
   { name: 'Home', href: '/' },
   { name: 'Contact Us', href: '/contact' },
+  { name: 'Public Records', href: '/public-records' },
   { name: 'Find My Voting District', href: 'https://districtsolvang.org', external: true },
   { name: 'Accessibility', href: '/accessibility' },
-  { name: 'Privacy Policy', href: '/privacy' },
 ]
 
 const departments = [
@@ -24,17 +22,6 @@ const departments = [
 ]
 
 export default function Footer() {
-  const { language, translate } = useLanguage()
-  const [emailPlaceholder, setEmailPlaceholder] = useState('Your email address')
-
-  useEffect(() => {
-    if (language === 'en') {
-      setEmailPlaceholder('Your email address')
-      return
-    }
-    translate('Your email address').then(setEmailPlaceholder)
-  }, [language, translate])
-
   return (
     <footer className="bg-gray-100 border-t">
       <div className="container-narrow py-12">
@@ -50,7 +37,7 @@ export default function Footer() {
               </div>
               <div>
                 <div className="font-bold text-navy-800"><Translated>City of Solvang</Translated></div>
-                <div className="text-xs text-gold-600"><Translated>The Danish Capital of America</Translated></div>
+                <div className="text-xs text-gold-700"><Translated>The Danish Capital of America</Translated></div>
               </div>
             </Link>
 
@@ -143,27 +130,19 @@ export default function Footer() {
 
           {/* Newsletter Signup */}
           <div>
-            <h3 className="font-semibold text-navy-800 mb-4"><Translated>Sign Up for E-News</Translated></h3>
+            <h3 className="font-semibold text-navy-800 mb-4"><Translated>Stay Informed</Translated></h3>
             <p className="text-sm text-gray-600 mb-3">
-              <Translated>Get city news and alerts delivered to your inbox.</Translated>
+              <Translated>Get city news and alerts delivered to your inbox or phone.</Translated>
             </p>
-            <form className="flex gap-2">
-              <label htmlFor="email-signup" className="sr-only">
-                <Translated>Email address</Translated>
-              </label>
-              <input
-                type="email"
-                id="email-signup"
-                placeholder={emailPlaceholder}
-                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-burgundy-600 text-white text-sm font-medium rounded-lg hover:bg-burgundy-500 transition-colors focus:outline-none focus:ring-2 focus:ring-burgundy-500 focus:ring-offset-2"
-              >
-                <Translated>Sign Up</Translated>
-              </button>
-            </form>
+            <Link
+              href="/subscribe"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-navy-700 text-white text-sm font-medium rounded-lg hover:bg-navy-600 transition-colors focus:outline-none focus:ring-2 focus:ring-navy-700 focus:ring-offset-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <Translated>Subscribe to Notifications</Translated>
+            </Link>
           </div>
         </div>
 

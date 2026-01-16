@@ -4,6 +4,8 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Providers from '@/components/Providers'
 import AccessibilityToolbar from '@/components/AccessibilityToolbar'
+import AlertBanner from '@/components/AlertBanner'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 export const metadata: Metadata = {
   title: 'City of Solvang - The Danish Capital of America',
@@ -30,12 +32,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <GoogleAnalytics />
       <body className="min-h-screen flex flex-col">
         <Providers>
           {/* Skip to main content - accessibility */}
           <a href="#main-content" className="skip-link">
             Skip to main content
           </a>
+
+          {/* Site-wide alerts */}
+          <AlertBanner />
 
           <Header />
 

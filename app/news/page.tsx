@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getNews } from '@/lib/contentful'
 import Translated from '@/components/Translated'
+import Breadcrumb from '@/components/Breadcrumb'
 
 export const revalidate = 60
 
@@ -56,6 +57,12 @@ export default async function NewsPage() {
   return (
     <main className="py-12">
       <div className="container-narrow">
+        <Breadcrumb
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'News & Announcements' },
+          ]}
+        />
         <h1 className="text-3xl font-bold text-navy-800 mb-2"><Translated>News & Announcements</Translated></h1>
         <p className="text-gray-600 mb-8">
           <Translated>Stay informed about what&apos;s happening in Solvang.</Translated>
