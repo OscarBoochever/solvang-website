@@ -99,10 +99,8 @@ export default function SubscriptionForm() {
           <Translated>Subscription Confirmed!</Translated>
         </h3>
         <p className="text-emerald-700 mb-4">
-          <Translated>
-            You have been subscribed to {selectedCategories.size} notification categories.
-            A confirmation email has been sent to {email}.
-          </Translated>
+          <Translated>You have been subscribed to</Translated> {selectedCategories.size} <Translated>notification categories.</Translated>
+          {' '}<Translated>A confirmation email has been sent to</Translated> {email}.
         </p>
         <button
           onClick={() => {
@@ -262,7 +260,7 @@ export default function SubscriptionForm() {
         </div>
 
         <p className="text-sm text-gray-500 mt-2">
-          <Translated>Selected: {selectedCategories.size} of {subscriptionCategories.length} categories</Translated>
+          <Translated>Selected:</Translated> {selectedCategories.size} <Translated>of</Translated> {subscriptionCategories.length} <Translated>categories</Translated>
         </p>
       </div>
 

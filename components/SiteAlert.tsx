@@ -67,7 +67,7 @@ export default function SiteAlert({ alerts }: SiteAlertProps) {
     setDismissedAlerts(newDismissed)
 
     try {
-      localStorage.setItem('dismissedAlerts', JSON.stringify([...newDismissed]))
+      localStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
     } catch {
       // Ignore localStorage errors
     }
