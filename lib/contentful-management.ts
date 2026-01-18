@@ -1,11 +1,23 @@
 import * as contentful from 'contentful-management'
 
-const client = contentful.createClient({
-  accessToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN!,
-})
+// Lazy client creation to avoid crashes when token is missing
+let client: any = null
+
+function getClient() {
+  if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+    throw new Error('CONTENTFUL_MANAGEMENT_TOKEN is not configured')
+  }
+  if (!client) {
+    client = contentful.createClient({
+      accessToken: process.env.CONTENTFUL_MANAGEMENT_TOKEN,
+    })
+  }
+  return client
+}
 
 async function getEnvironment() {
-  const space = await client.getSpace(process.env.CONTENTFUL_SPACE_ID!)
+  const c = getClient()
+  const space = await c.getSpace(process.env.CONTENTFUL_SPACE_ID!)
   return space.getEnvironment('master')
 }
 
