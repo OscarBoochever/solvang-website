@@ -35,11 +35,13 @@ export default function SubscribePage() {
           </div>
 
           {/* RSS Feeds Section */}
-          <div className="mt-8 bg-orange-50 rounded-xl p-6 border border-orange-100">
+          <div className="mt-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.18,15.64a2.18,2.18,0,1,1,0,4.36,2.18,2.18,0,0,1,0-4.36M4,4.44A1.5,1.5,0,0,1,4,7.44,12.56,12.56,0,0,0,16.56,20a1.5,1.5,0,0,1,3,0A15.56,15.56,0,0,1,4,4.44Zm0,5.66a1.5,1.5,0,0,1,0,3A6.9,6.9,0,0,0,10.9,20a1.5,1.5,0,0,1,3,0A9.9,9.9,0,0,1,4,10.1Z" />
+              <div className="w-10 h-10 bg-navy-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-navy-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="6.18" cy="17.82" r="2.18"/>
+                  <path d="M4 4.44v3c6.59.01 11.95 5.37 11.96 11.96h3C18.95 11.19 12.81 5.05 4 4.44z"/>
+                  <path d="M4 10.1v3c3.29.01 5.96 2.68 5.97 5.97h3C12.96 13.84 9.16 10.11 4 10.1z"/>
                 </svg>
               </div>
               <div>
@@ -47,50 +49,47 @@ export default function SubscribePage() {
                   <Translated>Prefer RSS?</Translated>
                 </h3>
                 <p className="text-sm text-gray-600">
-                  <Translated>Subscribe to updates using your favorite RSS reader</Translated>
+                  <Translated>Subscribe using your favorite feed reader</Translated>
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <a
                 href="/feed.xml"
-                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-orange-200 text-sm text-gray-700 hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 hover:border-navy-300 hover:bg-navy-50 transition-colors"
               >
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.18,15.64a2.18,2.18,0,1,1,0,4.36,2.18,2.18,0,0,1,0-4.36M4,4.44A1.5,1.5,0,0,1,4,7.44,12.56,12.56,0,0,0,16.56,20a1.5,1.5,0,0,1,3,0A15.56,15.56,0,0,1,4,4.44Zm0,5.66a1.5,1.5,0,0,1,0,3A6.9,6.9,0,0,0,10.9,20a1.5,1.5,0,0,1,3,0A9.9,9.9,0,0,1,4,10.1Z" />
+                <svg className="w-4 h-4 text-navy-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="6.18" cy="17.82" r="2.18"/>
+                  <path d="M4 4.44v3c6.59.01 11.95 5.37 11.96 11.96h3C18.95 11.19 12.81 5.05 4 4.44z"/>
+                  <path d="M4 10.1v3c3.29.01 5.96 2.68 5.97 5.97h3C12.96 13.84 9.16 10.11 4 10.1z"/>
                 </svg>
                 <Translated>All Updates</Translated>
               </a>
               <a
                 href="/feed/news"
-                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-orange-200 text-sm text-gray-700 hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 hover:border-navy-300 hover:bg-navy-50 transition-colors"
               >
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.18,15.64a2.18,2.18,0,1,1,0,4.36,2.18,2.18,0,0,1,0-4.36M4,4.44A1.5,1.5,0,0,1,4,7.44,12.56,12.56,0,0,0,16.56,20a1.5,1.5,0,0,1,3,0A15.56,15.56,0,0,1,4,4.44Zm0,5.66a1.5,1.5,0,0,1,0,3A6.9,6.9,0,0,0,10.9,20a1.5,1.5,0,0,1,3,0A9.9,9.9,0,0,1,4,10.1Z" />
+                <svg className="w-4 h-4 text-navy-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="6.18" cy="17.82" r="2.18"/>
+                  <path d="M4 4.44v3c6.59.01 11.95 5.37 11.96 11.96h3C18.95 11.19 12.81 5.05 4 4.44z"/>
+                  <path d="M4 10.1v3c3.29.01 5.96 2.68 5.97 5.97h3C12.96 13.84 9.16 10.11 4 10.1z"/>
                 </svg>
-                <Translated>News Only</Translated>
+                <Translated>News</Translated>
               </a>
               <a
                 href="/feed/events"
-                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-orange-200 text-sm text-gray-700 hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg border border-gray-200 text-sm text-gray-700 hover:border-navy-300 hover:bg-navy-50 transition-colors"
               >
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.18,15.64a2.18,2.18,0,1,1,0,4.36,2.18,2.18,0,0,1,0-4.36M4,4.44A1.5,1.5,0,0,1,4,7.44,12.56,12.56,0,0,0,16.56,20a1.5,1.5,0,0,1,3,0A15.56,15.56,0,0,1,4,4.44Zm0,5.66a1.5,1.5,0,0,1,0,3A6.9,6.9,0,0,0,10.9,20a1.5,1.5,0,0,1,3,0A9.9,9.9,0,0,1,4,10.1Z" />
+                <svg className="w-4 h-4 text-navy-600" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="6.18" cy="17.82" r="2.18"/>
+                  <path d="M4 4.44v3c6.59.01 11.95 5.37 11.96 11.96h3C18.95 11.19 12.81 5.05 4 4.44z"/>
+                  <path d="M4 10.1v3c3.29.01 5.96 2.68 5.97 5.97h3C12.96 13.84 9.16 10.11 4 10.1z"/>
                 </svg>
-                <Translated>Events & Meetings</Translated>
-              </a>
-              <a
-                href="/feed/departments/city-hall"
-                className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg border border-orange-200 text-sm text-gray-700 hover:bg-orange-100 transition-colors"
-              >
-                <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6.18,15.64a2.18,2.18,0,1,1,0,4.36,2.18,2.18,0,0,1,0-4.36M4,4.44A1.5,1.5,0,0,1,4,7.44,12.56,12.56,0,0,0,16.56,20a1.5,1.5,0,0,1,3,0A15.56,15.56,0,0,1,4,4.44Zm0,5.66a1.5,1.5,0,0,1,0,3A6.9,6.9,0,0,0,10.9,20a1.5,1.5,0,0,1,3,0A9.9,9.9,0,0,1,4,10.1Z" />
-                </svg>
-                <Translated>By Department</Translated>
+                <Translated>Events</Translated>
               </a>
             </div>
             <p className="mt-3 text-xs text-gray-500">
-              <Translated>RSS feeds are available for each department at /feed/departments/[department-slug]</Translated>
+              <Translated>Department-specific feeds are available on each department page.</Translated>
             </p>
           </div>
 

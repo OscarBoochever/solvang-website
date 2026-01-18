@@ -158,6 +158,21 @@ export default async function DepartmentPage({
                   <p className="text-gray-600"><Translated>Monday - Friday</Translated></p>
                   <p className="text-gray-600">8:00 AM - 5:00 PM</p>
                 </div>
+
+                {/* RSS Feed */}
+                <div className="pt-4 border-t">
+                  <a
+                    href={`/feed/departments/${slug}`}
+                    className="inline-flex items-center gap-2 text-sm text-navy-600 hover:text-navy-800"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <circle cx="6.18" cy="17.82" r="2.18"/>
+                      <path d="M4 4.44v3c6.59.01 11.95 5.37 11.96 11.96h3C18.95 11.19 12.81 5.05 4 4.44z"/>
+                      <path d="M4 10.1v3c3.29.01 5.96 2.68 5.97 5.97h3C12.96 13.84 9.16 10.11 4 10.1z"/>
+                    </svg>
+                    <Translated>Subscribe via RSS</Translated>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

@@ -35,28 +35,21 @@ export async function GET(
 
   const department = departmentResponse.items[0] as any
   const departmentName = department.fields.name
+  const departmentUpdated = new Date(department.sys.updatedAt).toUTCString()
 
-  // Get news items that might be related to this department
-  // In a real implementation, news would have a department field
-  const newsResponse = await client.getEntries({
-    content_type: 'news',
-    limit: 20,
-    order: ['-sys.createdAt'],
-  })
+  // Department feed contains the department's own information
+  // This provides a feed item when the department page is updated
+  const description = department.fields.description?.content?.[0]?.content?.[0]?.value ||
+    `Information and services from the ${departmentName} department.`
 
-  const items = newsResponse.items
-    .map((item: any) => {
-      const pubDate = new Date(item.fields.publishDate || item.sys.createdAt).toUTCString()
-      return `
+  const items = `
     <item>
-      <title>${escapeXml(item.fields.title)}</title>
-      <link>${SITE_URL}/news/${item.fields.slug}</link>
-      <guid isPermaLink="true">${SITE_URL}/news/${item.fields.slug}</guid>
-      <pubDate>${pubDate}</pubDate>
-      <description>${escapeXml(item.fields.excerpt || '')}</description>
+      <title>${escapeXml(departmentName)} - Department Information</title>
+      <link>${SITE_URL}/departments/${slug}</link>
+      <guid isPermaLink="true">${SITE_URL}/departments/${slug}</guid>
+      <pubDate>${departmentUpdated}</pubDate>
+      <description>${escapeXml(description)}</description>
     </item>`
-    })
-    .join('')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
