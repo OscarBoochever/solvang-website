@@ -247,7 +247,7 @@ export default function BusinessCertificateForm() {
         </div>
 
         {/* Start Date */}
-        <div>
+        <div className="min-w-0">
           <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
             <Translated>Proposed Start Date</Translated> <span className="text-red-500">*</span>
           </label>
@@ -258,7 +258,7 @@ export default function BusinessCertificateForm() {
             value={formData.startDate}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+            className="w-full min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
           />
         </div>
       </div>

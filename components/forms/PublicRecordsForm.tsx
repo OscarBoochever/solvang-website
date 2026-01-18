@@ -284,7 +284,7 @@ export default function PublicRecordsForm() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label htmlFor="dateRangeStart" className="block text-sm font-medium text-gray-700 mb-1">
                 <Translated>Date Range Start</Translated>
               </label>
@@ -294,11 +294,11 @@ export default function PublicRecordsForm() {
                 name="dateRangeStart"
                 value={formData.dateRangeStart}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+                className="w-full min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
               />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label htmlFor="dateRangeEnd" className="block text-sm font-medium text-gray-700 mb-1">
                 <Translated>Date Range End</Translated>
               </label>
@@ -308,7 +308,7 @@ export default function PublicRecordsForm() {
                 name="dateRangeEnd"
                 value={formData.dateRangeEnd}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
+                className="w-full min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
               />
             </div>
           </div>
