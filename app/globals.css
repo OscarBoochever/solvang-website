@@ -110,8 +110,12 @@
   input[type="datetime-local"] {
     font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     color: #1f2937; /* gray-800 */
-    min-width: 0; /* Prevent overflow on mobile */
-    max-width: 100%;
+    min-width: 0 !important; /* Prevent overflow on mobile */
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator,
