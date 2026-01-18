@@ -69,7 +69,7 @@ export const users: User[] = [
     email: 'admin@cityofsolvang.com',
     name: 'City Administrator',
     role: 'super_admin',
-    passwordHash: 'admin123', // Demo only - use bcrypt in production
+    passwordHash: 'Solvang2026!', // Demo only - use bcrypt in production
   },
   {
     id: '2',
@@ -78,7 +78,7 @@ export const users: User[] = [
     name: 'City Clerk',
     role: 'admin',
     department: 'City Clerk',
-    passwordHash: 'clerk123',
+    passwordHash: 'Clerk2026!',
   },
   {
     id: '3',
@@ -86,7 +86,7 @@ export const users: User[] = [
     email: 'editor@cityofsolvang.com',
     name: 'Content Editor',
     role: 'editor',
-    passwordHash: 'editor123',
+    passwordHash: 'Editor2026!',
   },
   {
     id: '4',
@@ -94,7 +94,7 @@ export const users: User[] = [
     email: 'viewer@cityofsolvang.com',
     name: 'Staff Viewer',
     role: 'viewer',
-    passwordHash: 'viewer123',
+    passwordHash: 'Viewer2026!',
   },
 ]
 

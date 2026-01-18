@@ -133,22 +133,22 @@ export default function AdminLogin() {
             <div className="mt-4 space-y-2 text-xs">
               <div className="bg-gray-50 p-3 rounded-lg">
                 <div className="font-semibold text-navy-700">Super Admin</div>
-                <div className="text-gray-600">admin / admin123</div>
+                <div className="text-gray-600">admin / Solvang2026!</div>
                 <div className="text-gray-400">Full access to all features</div>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
                 <div className="font-semibold text-navy-700">Administrator</div>
-                <div className="text-gray-600">cityclerk / clerk123</div>
+                <div className="text-gray-600">cityclerk / Clerk2026!</div>
                 <div className="text-gray-400">Can create, edit, delete, publish</div>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
                 <div className="font-semibold text-navy-700">Editor</div>
-                <div className="text-gray-600">editor / editor123</div>
+                <div className="text-gray-600">editor / Editor2026!</div>
                 <div className="text-gray-400">Can create and edit content</div>
               </div>
               <div className="bg-gray-50 p-3 rounded-lg">
                 <div className="font-semibold text-navy-700">Viewer</div>
-                <div className="text-gray-600">viewer / viewer123</div>
+                <div className="text-gray-600">viewer / Viewer2026!</div>
                 <div className="text-gray-400">Read-only access</div>
               </div>
             </div>

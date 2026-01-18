@@ -150,8 +150,12 @@ async function main() {
             'Meeting agendas are posted 72 hours in advance. Agendas, minutes, and video recordings are available on the City website.',
             [
               { text: 'Watch past meetings on the ' },
-              { link: { text: 'City of Solvang YouTube channel', url: 'https://www.youtube.com/@CityofSolvangCA' } },
+              { link: { text: 'City of Solvang YouTube channel', url: 'https://www.youtube.com/@CityofSolvang1' } },
               { text: '.' },
+            ],
+            [
+              { link: { text: 'Stream Live', url: '/city-council/live' } },
+              { text: ' - Watch ongoing City Council meetings in real-time via Vimeo.' },
             ],
           ],
         },

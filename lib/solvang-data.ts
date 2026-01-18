@@ -52,7 +52,8 @@ Help residents, businesses, and visitors quickly find information and take actio
 | Page | URL |
 |------|-----|
 | Homepage | ${SITE_URL} |
-| City Council & Agendas | ${SITE_URL}/city-council |
+| City Council | ${SITE_URL}/city-council |
+| Stream Live City Council Meetings | ${SITE_URL}/city-council/live |
 | Events Calendar | ${SITE_URL}/events |
 | News & Announcements | ${SITE_URL}/news |
 | How-To Guides | ${SITE_URL}/how-to |
@@ -96,6 +97,8 @@ Pay water/sewer bills:
 - **City Council:** 2nd & 4th Monday, 6:30 PM
 - **Planning Commission:** 1st & 3rd Monday, 6:00 PM
 - **View agendas:** ${SITE_URL}/city-council
+- **Watch live meetings:** ${SITE_URL}/city-council/live
+- **Past recordings:** YouTube (@CityofSolvang1) or Vimeo (vimeo.com/cityofsolvang)
 
 ### Business Services
 - **Apply for a business certificate:** ${SITE_URL}/business/business-certificate
