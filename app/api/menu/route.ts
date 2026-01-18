@@ -1,13 +1,33 @@
 import { NextResponse } from 'next/server'
 import { getMenu, saveMenu } from '@/lib/contentful-management'
+import fs from 'fs'
+import path from 'path'
+
+// Default menu from file (fallback)
+function getDefaultMenu() {
+  try {
+    const menuPath = path.join(process.cwd(), 'data', 'menu.json')
+    const data = fs.readFileSync(menuPath, 'utf-8')
+    return JSON.parse(data)
+  } catch {
+    return { items: [] }
+  }
+}
 
 export async function GET() {
   try {
     const menu = await getMenu()
+
+    // If Contentful returns empty, use the default menu from file
+    if (!menu.items || menu.items.length === 0) {
+      return NextResponse.json(getDefaultMenu())
+    }
+
     return NextResponse.json(menu)
   } catch (error) {
-    console.error('Error reading menu:', error)
-    return NextResponse.json({ items: [] })
+    console.error('Error reading menu from Contentful:', error)
+    // Fall back to file-based menu
+    return NextResponse.json(getDefaultMenu())
   }
 }
 
