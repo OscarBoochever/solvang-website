@@ -40,15 +40,29 @@ export default function MenuManager() {
     setLoading(false)
   }
 
-  const saveMenu = async () => {
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  const saveMenuToServer = async () => {
     setSaving(true)
-    await fetch('/api/menu', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(menu),
-    })
+    setSaveError(null)
+    try {
+      const res = await fetch('/api/menu', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(menu),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setSaveError(data.error || 'Failed to save')
+        console.error('Save error:', data)
+      } else {
+        setHasChanges(false)
+      }
+    } catch (err: any) {
+      setSaveError(err.message || 'Network error')
+      console.error('Save error:', err)
+    }
     setSaving(false)
-    setHasChanges(false)
   }
 
   const generateId = () => `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
@@ -198,11 +212,14 @@ export default function MenuManager() {
             <h1 className="font-bold">Menu Manager</h1>
           </div>
           <div className="flex items-center gap-3">
-            {hasChanges && (
+            {saveError && (
+              <span className="text-red-400 text-sm">Error: {saveError}</span>
+            )}
+            {hasChanges && !saveError && (
               <span className="text-gold-400 text-sm">Unsaved changes</span>
             )}
             <button
-              onClick={saveMenu}
+              onClick={saveMenuToServer}
               disabled={saving || !hasChanges}
               className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-500 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors"
             >
@@ -423,12 +440,15 @@ export default function MenuManager() {
 
           {/* Bottom Save Button */}
           <div className="mt-6 flex items-center justify-between pt-4 border-t">
-            {hasChanges && (
+            {saveError ? (
+              <span className="text-red-600 text-sm">Error: {saveError}</span>
+            ) : hasChanges ? (
               <span className="text-amber-600 text-sm">You have unsaved changes</span>
+            ) : (
+              <span />
             )}
-            {!hasChanges && <span />}
             <button
-              onClick={saveMenu}
+              onClick={saveMenuToServer}
               disabled={saving || !hasChanges}
               className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
             >

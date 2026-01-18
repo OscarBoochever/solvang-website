@@ -47,15 +47,24 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
     }
 
+    // Check if management token is configured
+    if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+      console.error('CONTENTFUL_MANAGEMENT_TOKEN is not set')
+      return NextResponse.json({ error: 'CMS not configured for writing' }, { status: 500 })
+    }
+
     const success = await saveMenu(body)
 
     if (success) {
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true, saved: body })
     } else {
-      return NextResponse.json({ error: 'Failed to save menu' }, { status: 500 })
+      return NextResponse.json({ error: 'Failed to save menu to CMS' }, { status: 500 })
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error saving menu:', error)
-    return NextResponse.json({ error: 'Failed to save menu' }, { status: 500 })
+    return NextResponse.json({
+      error: 'Failed to save menu',
+      details: error?.message || 'Unknown error'
+    }, { status: 500 })
   }
 }
