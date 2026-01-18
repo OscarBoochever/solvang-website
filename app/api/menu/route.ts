@@ -39,18 +39,7 @@ export async function GET() {
   }
 }
 
-export async function PUT(request: Request) {
-  // TEST: Just return success to see if API works at all
-  try {
-    const body = await request.json()
-
-    // For now, just acknowledge receipt - skip Contentful
-    return NextResponse.json({
-      success: true,
-      message: 'API working - Contentful save disabled for testing',
-      itemCount: body?.items?.length || 0
-    })
-  } catch (e: any) {
-    return NextResponse.json({ error: 'Basic API error', details: e?.message }, { status: 500 })
-  }
+export async function PUT() {
+  // SUPER MINIMAL TEST - just return static response, don't even read body
+  return NextResponse.json({ success: true, test: 'minimal' })
 }
