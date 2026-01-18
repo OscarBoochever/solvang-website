@@ -47,7 +47,7 @@ export default function MenuManager() {
     setSaveError(null)
     try {
       const res = await fetch('/api/menu', {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(menu),
       })

@@ -39,7 +39,24 @@ export async function GET() {
   }
 }
 
-// Force cache bust v2
-export async function PUT() {
-  return NextResponse.json({ success: true, test: 'v2' })
+// Use POST instead of PUT to avoid Vercel caching issues
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+
+    if (!body.items || !Array.isArray(body.items)) {
+      return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
+    }
+
+    // Dynamic import
+    const { saveMenu } = await import('@/lib/contentful-management')
+    await saveMenu(body)
+
+    return NextResponse.json({ success: true })
+  } catch (error: any) {
+    return NextResponse.json({
+      error: 'Failed to save',
+      details: error?.message || String(error)
+    }, { status: 500 })
+  }
 }
