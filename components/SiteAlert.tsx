@@ -48,16 +48,16 @@ const severityStyles = {
 export default function SiteAlert({ alerts }: SiteAlertProps) {
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())
 
-  // Load dismissed alerts from localStorage on mount
+  // Load dismissed alerts from sessionStorage on mount (session-only, not persistent)
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('dismissedAlerts')
+      const stored = sessionStorage.getItem('dismissedAlerts')
       if (stored) {
         const parsed = JSON.parse(stored)
         setDismissedAlerts(new Set(parsed))
       }
     } catch {
-      // Ignore localStorage errors
+      // Ignore storage errors
     }
   }, [])
 
@@ -67,9 +67,9 @@ export default function SiteAlert({ alerts }: SiteAlertProps) {
     setDismissedAlerts(newDismissed)
 
     try {
-      localStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
+      sessionStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
     } catch {
-      // Ignore localStorage errors
+      // Ignore storage errors
     }
   }
 
@@ -86,9 +86,9 @@ export default function SiteAlert({ alerts }: SiteAlertProps) {
         nonDismissibleIds.forEach(id => newDismissed.delete(id))
         setDismissedAlerts(newDismissed)
         try {
-          localStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
+          sessionStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
         } catch {
-          // Ignore localStorage errors
+          // Ignore storage errors
         }
       }
     }
