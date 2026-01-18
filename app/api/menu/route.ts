@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { getMenu, saveMenu } from '@/lib/contentful-management'
 import fs from 'fs'
 import path from 'path'
 
@@ -16,6 +15,8 @@ function getDefaultMenu() {
 
 export async function GET() {
   try {
+    // Dynamic import to avoid crashes at module load time
+    const { getMenu, saveMenu } = await import('@/lib/contentful-management')
     const menu = await getMenu()
 
     // If Contentful returns empty, seed it with the default menu and return that
@@ -53,6 +54,8 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
     }
 
+    // Dynamic import to avoid crashes at module load time
+    const { saveMenu } = await import('@/lib/contentful-management')
     const success = await saveMenu(body)
 
     if (success) {
