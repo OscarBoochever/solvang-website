@@ -43,6 +43,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://images.ctfassets.net" />
         <link rel="dns-prefetch" href="https://images.ctfassets.net" />
+        {/* RSS Feed Auto-Discovery */}
+        <link rel="alternate" type="application/rss+xml" title="City of Solvang - All Updates" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="City of Solvang - News" href="/feed/news" />
+        <link rel="alternate" type="application/rss+xml" title="City of Solvang - Events" href="/feed/events" />
       </head>
       <GoogleAnalytics />
       <body className="min-h-screen flex flex-col">

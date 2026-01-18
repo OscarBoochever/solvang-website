@@ -108,6 +108,13 @@ Pay water/sewer bills:
 ### Public Records
 Submit requests via: ${SITE_URL}/public-records
 
+### RSS Feeds
+Subscribe to city updates via RSS:
+- All updates: ${SITE_URL}/feed.xml
+- News only: ${SITE_URL}/feed/news
+- Events & Meetings: ${SITE_URL}/feed/events
+- By department: ${SITE_URL}/feed/departments/[department-slug]
+
 ## RESPONSE STYLE
 - **Be direct and concise.** Answer in 1-3 sentences max for simple questions.
 - **Always include relevant URLs** — don't make users search.

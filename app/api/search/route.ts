@@ -285,6 +285,20 @@ const staticContent = [
     description: 'Learn about Solvang\'s Danish heritage and founding story',
     url: '/solvang-history',
   },
+  {
+    id: 'service-rss-feeds',
+    type: 'service',
+    title: 'RSS Feeds',
+    keywords: [
+      'rss', 'feed', 'subscribe', 'atom', 'reader', 'updates', 'notifications',
+      // Spanish
+      'fuente', 'suscribir', 'actualizaciones',
+      // Danish
+      'feed', 'abonnere', 'opdateringer'
+    ],
+    description: 'Subscribe to city updates via RSS feed reader',
+    url: '/subscribe',
+  },
 ]
 
 function searchStaticContent(query: string): { id: string; type: string; title: string; description: string; url: string; score: number }[] {
