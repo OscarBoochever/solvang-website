@@ -39,7 +39,7 @@ export async function GET() {
   }
 }
 
+// Force cache bust v2
 export async function PUT() {
-  // SUPER MINIMAL TEST - just return static response, don't even read body
-  return NextResponse.json({ success: true, test: 'minimal' })
+  return NextResponse.json({ success: true, test: 'v2' })
 }
