@@ -40,46 +40,17 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  // Outer wrapper to catch ANY crash
+  // TEST: Just return success to see if API works at all
   try {
-    // Check if management token is configured FIRST before any async operations
-    if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
-      return NextResponse.json({ error: 'CMS not configured - missing CONTENTFUL_MANAGEMENT_TOKEN' }, { status: 500 })
-    }
+    const body = await request.json()
 
-    let body
-    try {
-      body = await request.json()
-    } catch (e: any) {
-      return NextResponse.json({ error: 'Failed to parse request body', details: e?.message }, { status: 400 })
-    }
-
-    // Validate structure
-    if (!body.items || !Array.isArray(body.items)) {
-      return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
-    }
-
-    // Dynamic import
-    let saveMenu
-    try {
-      const mod = await import('@/lib/contentful-management')
-      saveMenu = mod.saveMenu
-    } catch (e: any) {
-      return NextResponse.json({ error: 'Failed to load contentful module', details: e?.message }, { status: 500 })
-    }
-
-    // Save to Contentful
-    try {
-      await saveMenu(body)
-      return NextResponse.json({ success: true })
-    } catch (e: any) {
-      return NextResponse.json({ error: 'Contentful save failed', details: e?.message }, { status: 500 })
-    }
-  } catch (outerError: any) {
-    // This catches anything we missed
+    // For now, just acknowledge receipt - skip Contentful
     return NextResponse.json({
-      error: 'Unexpected server error',
-      details: outerError?.message || String(outerError)
-    }, { status: 500 })
+      success: true,
+      message: 'API working - Contentful save disabled for testing',
+      itemCount: body?.items?.length || 0
+    })
+  } catch (e: any) {
+    return NextResponse.json({ error: 'Basic API error', details: e?.message }, { status: 500 })
   }
 }
