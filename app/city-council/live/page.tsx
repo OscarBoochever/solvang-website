@@ -30,15 +30,17 @@ export default function StreamLivePage() {
         </p>
 
         {/* Vimeo Embed */}
-        <div className="bg-gray-900 rounded-xl overflow-hidden mb-8">
-          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-            <iframe
-              src="https://player.vimeo.com/video/cityofsolvang?autoplay=0&title=0&byline=0&portrait=0"
-              className="absolute top-0 left-0 w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title="City of Solvang Live Stream"
-            />
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="bg-gray-900 rounded-xl overflow-hidden">
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                src="https://player.vimeo.com/video/cityofsolvang?autoplay=0&title=0&byline=0&portrait=0"
+                className="absolute top-0 left-0 w-full h-full"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+                title="City of Solvang Live Stream"
+              />
+            </div>
           </div>
         </div>
 
