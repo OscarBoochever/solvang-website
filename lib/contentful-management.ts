@@ -272,25 +272,34 @@ export async function getMenu(): Promise<MenuData> {
 
 // Save menu to Contentful
 export async function saveMenu(menu: MenuData): Promise<boolean> {
+  // Step 1: Get environment
+  let environment
   try {
-    // Ensure content type exists
-    await ensureSiteSettingsContentType()
+    environment = await getEnvironment()
+  } catch (error: any) {
+    throw new Error(`Failed to connect to Contentful: ${error.message}`)
+  }
 
-    const environment = await getEnvironment()
-    const entries = await environment.getEntries({ content_type: 'siteSettings' })
+  // Step 2: Get existing entries
+  let entries
+  try {
+    entries = await environment.getEntries({ content_type: 'siteSettings' })
+  } catch (error: any) {
+    throw new Error(`Failed to fetch siteSettings entries: ${error.message}`)
+  }
 
-    // Find existing menu entry
-    let menuEntry = entries.items.find((e: any) =>
-      e.fields.key?.['en-US'] === 'navigation-menu'
-    )
+  // Step 3: Find existing menu entry
+  const menuEntry = entries.items.find((e: any) =>
+    e.fields.key?.['en-US'] === 'navigation-menu'
+  )
 
+  // Step 4: Update or create
+  try {
     if (menuEntry) {
-      // Update existing entry
       menuEntry.fields.value = { 'en-US': JSON.stringify(menu) }
       const updated = await menuEntry.update()
       await updated.publish()
     } else {
-      // Create new entry
       const entry = await environment.createEntry('siteSettings', {
         fields: {
           key: { 'en-US': 'navigation-menu' },
@@ -299,10 +308,9 @@ export async function saveMenu(menu: MenuData): Promise<boolean> {
       })
       await entry.publish()
     }
-
-    return true
-  } catch (error) {
-    console.error('Error saving menu to Contentful:', error)
-    return false
+  } catch (error: any) {
+    throw new Error(`Failed to save/publish menu entry: ${error.message}`)
   }
+
+  return true
 }
