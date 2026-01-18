@@ -18,9 +18,16 @@ export async function GET() {
   try {
     const menu = await getMenu()
 
-    // If Contentful returns empty, use the default menu from file
+    // If Contentful returns empty, seed it with the default menu and return that
     if (!menu.items || menu.items.length === 0) {
-      return NextResponse.json(getDefaultMenu())
+      const defaultMenu = getDefaultMenu()
+
+      // Seed Contentful with default menu (async, don't wait)
+      saveMenu(defaultMenu).catch(err =>
+        console.error('Failed to seed menu to Contentful:', err)
+      )
+
+      return NextResponse.json(defaultMenu)
     }
 
     return NextResponse.json(menu)
