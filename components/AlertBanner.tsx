@@ -1,7 +1,10 @@
+import { unstable_noStore as noStore } from 'next/cache'
 import SiteAlert, { Alert } from './SiteAlert'
 import { getActiveAlerts } from '@/lib/contentful'
 
 export default async function AlertBanner() {
+  // Disable caching for alerts - they should always be fresh
+  noStore()
   let alerts: Alert[] = []
 
   try {

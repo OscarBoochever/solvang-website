@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
+// Revalidate layout data (including alerts) every 60 seconds
+export const revalidate = 60
+
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
