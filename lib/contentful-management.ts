@@ -163,3 +163,134 @@ export async function getAsset(assetId: string) {
   const environment = await getEnvironment()
   return environment.getAsset(assetId)
 }
+
+// Menu management
+interface MenuItem {
+  id: string
+  label: string
+  url: string
+  children?: MenuItem[]
+}
+
+interface MenuData {
+  items: MenuItem[]
+}
+
+const SITE_SETTINGS_ID = 'site-settings-menu'
+
+// Ensure siteSettings content type exists
+async function ensureSiteSettingsContentType(): Promise<boolean> {
+  try {
+    const environment = await getEnvironment()
+
+    try {
+      await environment.getContentType('siteSettings')
+      return true // Already exists
+    } catch (e: any) {
+      if (e.name === 'NotFound') {
+        // Create the content type
+        const contentType = await environment.createContentTypeWithId('siteSettings', {
+          name: 'Site Settings',
+          description: 'Key-value store for site configuration',
+          displayField: 'key',
+          fields: [
+            {
+              id: 'key',
+              name: 'Key',
+              type: 'Symbol',
+              required: true,
+              localized: false,
+            },
+            {
+              id: 'value',
+              name: 'Value',
+              type: 'Text',
+              required: false,
+              localized: false,
+            },
+          ],
+        })
+        await contentType.publish()
+        return true
+      }
+      throw e
+    }
+  } catch (error) {
+    console.error('Error ensuring siteSettings content type:', error)
+    return false
+  }
+}
+
+// Get menu from Contentful (stored in a siteSettings entry)
+export async function getMenu(): Promise<MenuData> {
+  try {
+    const environment = await getEnvironment()
+
+    // Try to get entries, create content type if needed
+    let entries
+    try {
+      entries = await environment.getEntries({ content_type: 'siteSettings' })
+    } catch (e: any) {
+      if (e.name === 'NotFound' || e.message?.includes('Unknown content type')) {
+        await ensureSiteSettingsContentType()
+        return { items: [] }
+      }
+      throw e
+    }
+
+    // Find the menu settings entry
+    const menuEntry = entries.items.find((e: any) =>
+      e.fields.key?.['en-US'] === 'navigation-menu'
+    )
+
+    if (menuEntry) {
+      const menuJson = menuEntry.fields.value?.['en-US']
+      if (menuJson) {
+        return typeof menuJson === 'string' ? JSON.parse(menuJson) : menuJson
+      }
+    }
+
+    // Return default menu if none found
+    return { items: [] }
+  } catch (error) {
+    console.error('Error fetching menu from Contentful:', error)
+    return { items: [] }
+  }
+}
+
+// Save menu to Contentful
+export async function saveMenu(menu: MenuData): Promise<boolean> {
+  try {
+    // Ensure content type exists
+    await ensureSiteSettingsContentType()
+
+    const environment = await getEnvironment()
+    const entries = await environment.getEntries({ content_type: 'siteSettings' })
+
+    // Find existing menu entry
+    let menuEntry = entries.items.find((e: any) =>
+      e.fields.key?.['en-US'] === 'navigation-menu'
+    )
+
+    if (menuEntry) {
+      // Update existing entry
+      menuEntry.fields.value = { 'en-US': JSON.stringify(menu) }
+      const updated = await menuEntry.update()
+      await updated.publish()
+    } else {
+      // Create new entry
+      const entry = await environment.createEntry('siteSettings', {
+        fields: {
+          key: { 'en-US': 'navigation-menu' },
+          value: { 'en-US': JSON.stringify(menu) },
+        },
+      })
+      await entry.publish()
+    }
+
+    return true
+  } catch (error) {
+    console.error('Error saving menu to Contentful:', error)
+    return false
+  }
+}
