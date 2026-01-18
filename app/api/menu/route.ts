@@ -39,18 +39,18 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  // Check if management token is configured FIRST before any async operations
+  if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+    console.error('CONTENTFUL_MANAGEMENT_TOKEN is not set')
+    return NextResponse.json({ error: 'CMS not configured - missing CONTENTFUL_MANAGEMENT_TOKEN' }, { status: 500 })
+  }
+
   try {
     const body = await request.json()
 
     // Validate structure
     if (!body.items || !Array.isArray(body.items)) {
       return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
-    }
-
-    // Check if management token is configured
-    if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
-      console.error('CONTENTFUL_MANAGEMENT_TOKEN is not set')
-      return NextResponse.json({ error: 'CMS not configured for writing' }, { status: 500 })
     }
 
     const success = await saveMenu(body)
@@ -64,7 +64,7 @@ export async function PUT(request: Request) {
     console.error('Error saving menu:', error)
     return NextResponse.json({
       error: 'Failed to save menu',
-      details: error?.message || 'Unknown error'
+      details: error?.message || String(error) || 'Unknown error'
     }, { status: 500 })
   }
 }

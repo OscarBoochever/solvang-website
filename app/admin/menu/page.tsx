@@ -51,9 +51,18 @@ export default function MenuManager() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(menu),
       })
-      const data = await res.json()
+
+      // Handle empty or invalid response
+      const text = await res.text()
+      let data
+      try {
+        data = text ? JSON.parse(text) : { error: 'Empty response from server' }
+      } catch {
+        data = { error: `Invalid response: ${text.slice(0, 100)}` }
+      }
+
       if (!res.ok) {
-        setSaveError(data.error || 'Failed to save')
+        setSaveError(data.error || data.details || 'Failed to save')
         console.error('Save error:', data)
       } else {
         setHasChanges(false)
