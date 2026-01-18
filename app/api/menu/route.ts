@@ -40,34 +40,46 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  // Check if management token is configured FIRST before any async operations
-  if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
-    console.error('CONTENTFUL_MANAGEMENT_TOKEN is not set')
-    return NextResponse.json({ error: 'CMS not configured - missing CONTENTFUL_MANAGEMENT_TOKEN' }, { status: 500 })
-  }
-
+  // Outer wrapper to catch ANY crash
   try {
-    const body = await request.json()
+    // Check if management token is configured FIRST before any async operations
+    if (!process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+      return NextResponse.json({ error: 'CMS not configured - missing CONTENTFUL_MANAGEMENT_TOKEN' }, { status: 500 })
+    }
+
+    let body
+    try {
+      body = await request.json()
+    } catch (e: any) {
+      return NextResponse.json({ error: 'Failed to parse request body', details: e?.message }, { status: 400 })
+    }
 
     // Validate structure
     if (!body.items || !Array.isArray(body.items)) {
       return NextResponse.json({ error: 'Invalid menu structure' }, { status: 400 })
     }
 
-    // Dynamic import to avoid crashes at module load time
-    const { saveMenu } = await import('@/lib/contentful-management')
-    const success = await saveMenu(body)
-
-    if (success) {
-      return NextResponse.json({ success: true, saved: body })
-    } else {
-      return NextResponse.json({ error: 'Failed to save menu to CMS' }, { status: 500 })
+    // Dynamic import
+    let saveMenu
+    try {
+      const mod = await import('@/lib/contentful-management')
+      saveMenu = mod.saveMenu
+    } catch (e: any) {
+      return NextResponse.json({ error: 'Failed to load contentful module', details: e?.message }, { status: 500 })
     }
-  } catch (error: any) {
-    console.error('Error saving menu:', error)
+
+    // Save to Contentful
+    try {
+      await saveMenu(body)
+      return NextResponse.json({ success: true })
+    } catch (e: any) {
+      return NextResponse.json({ error: 'Contentful save failed', details: e?.message }, { status: 500 })
+    }
+  } catch (outerError: any) {
+    // This catches anything we missed
     return NextResponse.json({
-      error: 'Failed to save menu',
-      details: error?.message || String(error) || 'Unknown error'
+      error: 'Unexpected server error',
+      details: outerError?.message || String(outerError)
     }, { status: 500 })
   }
 }
