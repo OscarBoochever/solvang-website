@@ -7,7 +7,7 @@ import Translated from '@/components/Translated'
 
 interface SearchResult {
   id: string
-  type: 'department' | 'page' | 'news' | 'event'
+  type: 'form' | 'service' | 'department' | 'page' | 'news' | 'event'
   title: string
   description: string
   url: string
@@ -19,10 +19,12 @@ interface SearchDropdownProps {
 }
 
 const typeLabels: Record<string, { label: string; color: string }> = {
+  form: { label: 'Form', color: 'bg-sky-100 text-sky-700' },
+  service: { label: 'Service', color: 'bg-emerald-100 text-emerald-700' },
   department: { label: 'Department', color: 'bg-navy-100 text-navy-700' },
   page: { label: 'Page', color: 'bg-gray-100 text-gray-700' },
   news: { label: 'News', color: 'bg-gold-100 text-gold-700' },
-  event: { label: 'Event', color: 'bg-emerald-100 text-emerald-700' },
+  event: { label: 'Event', color: 'bg-burgundy-100 text-burgundy-700' },
 }
 
 export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
@@ -80,7 +82,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
     }
   }, [isOpen, onClose])
 
-  // Debounced search
+  // Debounced search with translation support
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
@@ -94,7 +96,21 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
     setIsLoading(true)
     debounceRef.current = setTimeout(async () => {
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        // If not English, translate query to English for searching
+        let searchQuery = query
+        if (language !== 'en') {
+          const response = await fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: query, targetLang: 'en' }),
+          })
+          const data = await response.json()
+          if (data.translatedText) {
+            searchQuery = data.translatedText
+          }
+        }
+
+        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
         const data = await response.json()
         setResults(data.results || [])
       } catch (error) {
@@ -110,7 +126,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
         clearTimeout(debounceRef.current)
       }
     }
-  }, [query])
+  }, [query, language])
 
   if (!isOpen) return null
 
@@ -159,7 +175,7 @@ export default function SearchModal({ isOpen, onClose }: SearchDropdownProps) {
                           <Translated>{typeInfo.label}</Translated>
                         </span>
                         <span className="text-sm font-medium text-navy-800 truncate">
-                          {result.title}
+                          <Translated>{result.title}</Translated>
                         </span>
                       </div>
                     </div>

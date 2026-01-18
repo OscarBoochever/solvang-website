@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 export default function EditPage() {
   const [loading, setLoading] = useState(true)
@@ -50,10 +51,23 @@ export default function EditPage() {
         hour12: false
       })
     }
+    // Get content - check if it's our custom HTML format or Contentful rich text
+    let contentHtml = ''
+    const contentField = fields.content?.['en-US']
+    if (contentField) {
+      if (contentField.data?.isHtml) {
+        // Our custom HTML format - extract the raw HTML
+        contentHtml = contentField.content?.[0]?.content?.[0]?.value || ''
+      } else {
+        // Contentful rich text - convert to HTML
+        contentHtml = documentToHtmlString(contentField)
+      }
+    }
+
     setForm({
       title: fields.title?.['en-US'] || '',
       slug: fields.slug?.['en-US'] || '',
-      content: fields.content?.['en-US'] ? documentToPlainTextString(fields.content['en-US']) : '',
+      content: contentHtml,
       metaDescription: fields.metaDescription?.['en-US'] || '',
       status: fields.status?.['en-US'] || 'published',
       scheduledDate,
@@ -137,7 +151,11 @@ export default function EditPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea rows={12} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" placeholder="Page content. Separate paragraphs with blank lines." />
+            <RichTextEditor
+              value={form.content}
+              onChange={(content) => setForm({ ...form, content })}
+              placeholder="Start typing your page content..."
+            />
           </div>
 
           <div className="flex gap-4 pt-4 border-t">

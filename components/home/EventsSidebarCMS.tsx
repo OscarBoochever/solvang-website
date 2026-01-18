@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getUpcomingEvents } from '@/lib/contentful'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { richTextToPlainText } from '@/lib/richTextUtils'
 import Translated from '@/components/Translated'
 
 function formatEventDate(dateString: string) {
@@ -38,7 +38,7 @@ export default async function EventsSidebarCMS() {
             const fields = event.fields
             const { month, day, weekday } = formatEventDate(fields.date)
             const description = fields.description
-              ? documentToPlainTextString(fields.description)
+              ? richTextToPlainText(fields.description)
               : null
 
             return (

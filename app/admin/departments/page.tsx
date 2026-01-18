@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
 import { Permission } from '@/lib/auth'
 
 export default function AdminDepartments() {

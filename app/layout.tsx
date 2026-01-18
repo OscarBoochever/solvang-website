@@ -1,11 +1,19 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import Providers from '@/components/Providers'
 import AccessibilityToolbar from '@/components/AccessibilityToolbar'
 import AlertBanner from '@/components/AlertBanner'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import A11yScanner from '@/components/A11yScanner'
 
 export const metadata: Metadata = {
   title: 'City of Solvang - The Danish Capital of America',
@@ -31,7 +39,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
+      <head>
+        <link rel="preconnect" href="https://images.ctfassets.net" />
+        <link rel="dns-prefetch" href="https://images.ctfassets.net" />
+      </head>
       <GoogleAnalytics />
       <body className="min-h-screen flex flex-col">
         <Providers>
@@ -53,6 +65,9 @@ export default function RootLayout({
 
           {/* Accessibility Toolbar - WCAG 2.2 AA Compliance */}
           <AccessibilityToolbar />
+
+          {/* Automated A11y Scanner - Dev Mode Only */}
+          <A11yScanner />
         </Providers>
       </body>
     </html>

@@ -1,7 +1,8 @@
+import React from 'react'
 import { notFound } from 'next/navigation'
 import { getDepartmentBySlug, getDepartments } from '@/lib/contentful'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
-import { BLOCKS } from '@contentful/rich-text-types'
+import { BLOCKS, INLINES, MARKS } from '@contentful/rich-text-types'
 import Translated from '@/components/Translated'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -18,6 +19,10 @@ export async function generateStaticParams() {
 // Rich text rendering options with translation support
 const richTextOptions = {
   renderText: (text: string) => <Translated>{text}</Translated>,
+  renderMark: {
+    [MARKS.BOLD]: (text: React.ReactNode) => <strong className="font-semibold">{text}</strong>,
+    [MARKS.ITALIC]: (text: React.ReactNode) => <em>{text}</em>,
+  },
   renderNode: {
     [BLOCKS.PARAGRAPH]: (node: any, children: any) => (
       <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
@@ -36,6 +41,16 @@ const richTextOptions = {
     ),
     [BLOCKS.OL_LIST]: (node: any, children: any) => (
       <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-700">{children}</ol>
+    ),
+    [INLINES.HYPERLINK]: (node: any, children: any) => (
+      <a
+        href={node.data.uri}
+        className="text-navy-600 hover:text-navy-800 underline"
+        target={node.data.uri.startsWith('http') ? '_blank' : undefined}
+        rel={node.data.uri.startsWith('http') ? 'noopener noreferrer' : undefined}
+      >
+        {children}
+      </a>
     ),
   },
 }
@@ -72,13 +87,31 @@ export default async function DepartmentPage({
 
             {fields.description && (
               <div className="text-lg text-gray-600 mb-6 pb-6 border-b">
-                {documentToReactComponents(fields.description, richTextOptions)}
+                {fields.description.data?.isHtml ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: fields.description.content?.[0]?.content?.[0]?.value || ''
+                    }}
+                    className="rich-text-content"
+                  />
+                ) : (
+                  documentToReactComponents(fields.description, richTextOptions)
+                )}
               </div>
             )}
 
             {fields.content && (
               <div className="prose prose-navy max-w-none">
-                {documentToReactComponents(fields.content, richTextOptions)}
+                {fields.content.data?.isHtml ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: fields.content.content?.[0]?.content?.[0]?.value || ''
+                    }}
+                    className="rich-text-content"
+                  />
+                ) : (
+                  documentToReactComponents(fields.content, richTextOptions)
+                )}
               </div>
             )}
           </div>

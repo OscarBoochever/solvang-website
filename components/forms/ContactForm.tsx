@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Translated from '@/components/Translated'
+import { useLanguage } from '@/lib/LanguageContext'
 
 interface FormData {
   name: string
@@ -38,6 +39,27 @@ export default function ContactForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const { language, translate } = useLanguage()
+
+  // Translated options and placeholders
+  const [translatedDepts, setTranslatedDepts] = useState<string[]>(departments)
+  const [selectPlaceholder, setSelectPlaceholder] = useState('Select a department...')
+
+  // Translate dropdown options and placeholders when language changes
+  useEffect(() => {
+    if (language === 'en') {
+      setTranslatedDepts(departments)
+      setSelectPlaceholder('Select a department...')
+      return
+    }
+
+    // Translate departments
+    Promise.all(departments.map(dept => translate(dept)))
+      .then(setTranslatedDepts)
+
+    // Translate placeholder
+    translate('Select a department...').then(setSelectPlaceholder)
+  }, [language, translate])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -174,10 +196,10 @@ export default function ContactForm() {
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 bg-white"
           >
-            <option value="">Select a department...</option>
-            {departments.map((dept) => (
+            <option value="">{selectPlaceholder}</option>
+            {departments.map((dept, index) => (
               <option key={dept} value={dept}>
-                {dept}
+                {translatedDepts[index]}
               </option>
             ))}
           </select>

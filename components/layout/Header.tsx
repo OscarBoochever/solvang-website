@@ -5,96 +5,34 @@ import Link from 'next/link'
 import { useLanguage, languages } from '@/lib/LanguageContext'
 import Translated from '@/components/Translated'
 import SearchModal from '@/components/SearchModal'
+import ChatModal from '@/components/chat/ChatModal'
 
-interface SubMenuItem {
-  name: string
-  href: string
+interface MenuItem {
+  id: string
+  label: string
+  url: string
+  children?: MenuItem[]
 }
-
-interface NavItem {
-  name: string
-  href: string
-  submenu?: SubMenuItem[]
-}
-
-const navigation: NavItem[] = [
-  {
-    name: 'How To',
-    href: '/how-to',
-    submenu: [
-      { name: 'Apply for a Permit', href: '/how-to#apply-for' },
-      { name: 'Pay Utility Bill', href: '/how-to#make-a-payment' },
-      { name: 'Report a Concern', href: '/how-to#submit-a-request' },
-      { name: 'Public Records Request', href: '/how-to#submit-a-request' },
-      { name: 'Sign Up for Alerts', href: '/how-to#sign-up' },
-    ],
-  },
-  {
-    name: 'Residents',
-    href: '/residents',
-    submenu: [
-      { name: 'Utility Services', href: '/residents#utility-services' },
-      { name: 'Public Safety', href: '/residents#public-safety' },
-      { name: 'Parks & Recreation', href: '/departments/parks-recreation' },
-      { name: 'Transit', href: '/residents#transportation' },
-      { name: 'Report a Concern', href: '/residents#report-a-concern' },
-    ],
-  },
-  {
-    name: 'City Hall',
-    href: '/city-council',
-    submenu: [
-      { name: 'City Council', href: '/city-council' },
-      { name: 'Agendas & Minutes', href: '/city-council#agendas--minutes' },
-      { name: 'Departments', href: '/departments' },
-      { name: 'News & Announcements', href: '/news' },
-      { name: 'Events Calendar', href: '/events' },
-    ],
-  },
-  {
-    name: 'Business',
-    href: '/business',
-    submenu: [
-      { name: 'Start a Business', href: '/business#starting-a-business' },
-      { name: 'Licenses & Permits', href: '/business#licenses--permits' },
-      { name: 'Bid Opportunities', href: '/business#bid-opportunities' },
-      { name: 'Zoning Info', href: '/business#zoning--land-use' },
-    ],
-  },
-  {
-    name: 'Departments',
-    href: '/departments',
-    submenu: [
-      { name: 'Administration', href: '/departments/administration' },
-      { name: 'Community Development', href: '/departments/community-development' },
-      { name: 'Economic Development', href: '/departments/economic-development' },
-      { name: 'Parks & Recreation', href: '/departments/parks-recreation' },
-      { name: 'Public Safety', href: '/departments/public-safety' },
-      { name: 'Public Works', href: '/departments/public-works' },
-      { name: 'Utilities', href: '/departments/utilities' },
-    ],
-  },
-  {
-    name: 'Visitors',
-    href: '/visitors',
-    submenu: [
-      { name: 'Things to Do', href: '/visitors#things-to-do' },
-      { name: 'Special Events', href: '/visitors#special-events' },
-      { name: 'Solvang History', href: '/solvang-history' },
-      { name: 'Getting Here', href: '/visitors#getting-here' },
-    ],
-  },
-]
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [langMenuOpen, setLangMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [expandedMobileItem, setExpandedMobileItem] = useState<string | null>(null)
+  const [navigation, setNavigation] = useState<MenuItem[]>([])
   const { language, setLanguage } = useLanguage()
   const langMenuRef = useRef<HTMLDivElement>(null)
 
   const currentLang = languages.find(l => l.code === language) || languages[0]
+
+  // Fetch menu data
+  useEffect(() => {
+    fetch('/api/menu')
+      .then(res => res.json())
+      .then(data => setNavigation(data.items || []))
+      .catch(() => setNavigation([]))
+  }, [])
 
   // Close language menu when clicking outside
   useEffect(() => {
@@ -154,7 +92,7 @@ export default function Header() {
 
             <span className="text-navy-400">|</span>
             <Link href="/admin" className="hover:text-gold-400 transition-colors">
-              <Translated>Sign In</Translated>
+              <Translated>Employee Portal</Translated>
             </Link>
           </div>
         </div>
@@ -185,13 +123,13 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {navigation.map((item) => (
-              <div key={item.name} className="relative group">
+              <div key={item.id} className="relative group">
                 <Link
-                  href={item.href}
+                  href={item.url}
                   className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 hover:text-navy-700 hover:bg-navy-50 rounded-lg transition-colors"
                 >
-                  <Translated>{item.name}</Translated>
-                  {item.submenu && (
+                  <Translated>{item.label}</Translated>
+                  {item.children && item.children.length > 0 && (
                     <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -199,16 +137,16 @@ export default function Header() {
                 </Link>
 
                 {/* Dropdown on hover */}
-                {item.submenu && (
+                {item.children && item.children.length > 0 && (
                   <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
                     <div className="bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-48">
-                      {item.submenu.map((subitem) => (
+                      {item.children.map((subitem) => (
                         <Link
-                          key={subitem.name}
-                          href={subitem.href}
+                          key={subitem.id}
+                          href={subitem.url}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-navy-50 hover:text-navy-700 transition-colors"
                         >
-                          <Translated>{subitem.name}</Translated>
+                          <Translated>{subitem.label}</Translated>
                         </Link>
                       ))}
                     </div>
@@ -218,8 +156,19 @@ export default function Header() {
             ))}
           </div>
 
-          {/* Search and Mobile Menu */}
+          {/* Chat, Search, and Mobile Menu */}
           <div className="flex items-center gap-2">
+            {/* Chat Button */}
+            <button
+              onClick={() => setChatOpen(true)}
+              className="p-2 text-gray-600 hover:text-navy-700 hover:bg-navy-50 rounded-lg transition-colors"
+              aria-label="Open chat assistant"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </button>
+
             {/* Search Button */}
             <div className="relative">
               <button
@@ -259,16 +208,16 @@ export default function Header() {
           <div className="lg:hidden py-4 border-t animate-fade-in">
             <div className="flex flex-col gap-1">
               {navigation.map((item) => (
-                <div key={item.name}>
-                  {item.submenu ? (
+                <div key={item.id}>
+                  {item.children && item.children.length > 0 ? (
                     <>
                       <button
-                        onClick={() => setExpandedMobileItem(expandedMobileItem === item.name ? null : item.name)}
+                        onClick={() => setExpandedMobileItem(expandedMobileItem === item.id ? null : item.id)}
                         className="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-700 hover:text-navy-700 hover:bg-navy-50 rounded-lg transition-colors"
                       >
-                        <Translated>{item.name}</Translated>
+                        <Translated>{item.label}</Translated>
                         <svg
-                          className={`w-4 h-4 transition-transform ${expandedMobileItem === item.name ? 'rotate-180' : ''}`}
+                          className={`w-4 h-4 transition-transform ${expandedMobileItem === item.id ? 'rotate-180' : ''}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -276,23 +225,23 @@ export default function Header() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      {expandedMobileItem === item.name && (
+                      {expandedMobileItem === item.id && (
                         <div className="ml-4 border-l-2 border-navy-100 pl-4 py-1">
                           <Link
-                            href={item.href}
+                            href={item.url}
                             className="block px-4 py-2 text-sm text-navy-600 font-medium hover:bg-navy-50 rounded-lg"
                             onClick={() => setMobileMenuOpen(false)}
                           >
                             <Translated>View All</Translated>
                           </Link>
-                          {item.submenu.map((subitem) => (
+                          {item.children.map((subitem) => (
                             <Link
-                              key={subitem.name}
-                              href={subitem.href}
+                              key={subitem.id}
+                              href={subitem.url}
                               className="block px-4 py-2 text-sm text-gray-600 hover:text-navy-700 hover:bg-navy-50 rounded-lg"
                               onClick={() => setMobileMenuOpen(false)}
                             >
-                              <Translated>{subitem.name}</Translated>
+                              <Translated>{subitem.label}</Translated>
                             </Link>
                           ))}
                         </div>
@@ -300,11 +249,11 @@ export default function Header() {
                     </>
                   ) : (
                     <Link
-                      href={item.href}
+                      href={item.url}
                       className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-navy-700 hover:bg-navy-50 rounded-lg transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Translated>{item.name}</Translated>
+                      <Translated>{item.label}</Translated>
                     </Link>
                   )}
                 </div>
@@ -313,6 +262,9 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      {/* Chat Modal */}
+      <ChatModal isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </header>
   )
 }

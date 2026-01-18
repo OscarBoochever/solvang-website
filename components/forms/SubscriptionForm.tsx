@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Translated from '@/components/Translated'
 import { subscriptionCategories, DeliveryMethod } from '@/lib/subscriptions'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function SubscriptionForm() {
   const [email, setEmail] = useState('')
@@ -11,6 +12,20 @@ export default function SubscriptionForm() {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set())
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const { language, translate } = useLanguage()
+
+  // Translated placeholder
+  const [phonePlaceholder, setPhonePlaceholder] = useState('(555) 555-5555')
+
+  // Translate placeholder when language changes
+  useEffect(() => {
+    if (language === 'en') {
+      setPhonePlaceholder('(555) 555-5555')
+      return
+    }
+
+    translate('(555) 555-5555').then(setPhonePlaceholder)
+  }, [language, translate])
 
   const toggleCategory = (categoryId: string) => {
     const newSelected = new Set(selectedCategories)
@@ -157,7 +172,7 @@ export default function SubscriptionForm() {
               id="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="(555) 555-5555"
+              placeholder={phonePlaceholder}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500"
             />
           </div>

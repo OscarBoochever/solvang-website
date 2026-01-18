@@ -31,9 +31,9 @@ export default function AccessibilityPage() {
             <p className="text-gray-700 mb-4">
               <Translated>
                 The City of Solvang is committed to ensuring that our website is accessible to all users,
-                including those with disabilities. We strive to meet or exceed the Web Content Accessibility
-                Guidelines (WCAG) 2.2 Level AA standards, as required by Section 508 of the Rehabilitation Act
-                and the Americans with Disabilities Act (ADA).
+                including those with disabilities. We comply with the Web Content Accessibility
+                Guidelines (WCAG) 2.2 Level AA standards, California Government Code Sections 7405 and 11135,
+                Section 508 of the Rehabilitation Act, and the Americans with Disabilities Act (ADA).
               </Translated>
             </p>
             <p className="text-gray-700">
@@ -207,6 +207,31 @@ export default function AccessibilityPage() {
               </li>
               <li>
                 <Translated>Your contact information so we can follow up</Translated>
+              </li>
+            </ul>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold text-navy-800 mb-4">
+              <Translated>Continuous Monitoring</Translated>
+            </h2>
+            <p className="text-gray-700 mb-4">
+              <Translated>
+                We employ automated accessibility testing tools that continuously monitor this website for compliance:
+              </Translated>
+            </p>
+            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+              <li>
+                <Translated>Automated axe-core scanning during development for real-time issue detection</Translated>
+              </li>
+              <li>
+                <Translated>ESLint jsx-a11y plugin for code-level accessibility validation</Translated>
+              </li>
+              <li>
+                <Translated>Regular manual testing with screen readers and keyboard navigation</Translated>
+              </li>
+              <li>
+                <Translated>Periodic third-party accessibility audits</Translated>
               </li>
             </ul>
           </section>

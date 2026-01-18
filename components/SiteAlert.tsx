@@ -73,9 +73,31 @@ export default function SiteAlert({ alerts }: SiteAlertProps) {
     }
   }
 
+  // Clear dismissals for non-dismissible alerts (so they must be re-dismissed if made dismissible again)
+  useEffect(() => {
+    const nonDismissibleIds = alerts
+      .filter(alert => alert.dismissible === false)
+      .map(alert => alert.id)
+
+    if (nonDismissibleIds.length > 0 && dismissedAlerts.size > 0) {
+      const hasOverlap = nonDismissibleIds.some(id => dismissedAlerts.has(id))
+      if (hasOverlap) {
+        const newDismissed = new Set(dismissedAlerts)
+        nonDismissibleIds.forEach(id => newDismissed.delete(id))
+        setDismissedAlerts(newDismissed)
+        try {
+          localStorage.setItem('dismissedAlerts', JSON.stringify(Array.from(newDismissed)))
+        } catch {
+          // Ignore localStorage errors
+        }
+      }
+    }
+  }, [alerts, dismissedAlerts])
+
   // Filter out dismissed and expired alerts
+  // Only honor dismissals for alerts that are actually dismissible
   const activeAlerts = alerts.filter((alert) => {
-    if (dismissedAlerts.has(alert.id)) return false
+    if (alert.dismissible !== false && dismissedAlerts.has(alert.id)) return false
     if (alert.expiresAt && new Date(alert.expiresAt) < new Date()) return false
     return true
   })

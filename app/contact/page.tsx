@@ -15,6 +15,7 @@ export default function ContactPage() {
         <Breadcrumb
           items={[
             { label: 'Home', href: '/' },
+            { label: 'How To', href: '/how-to' },
             { label: 'Contact Us' },
           ]}
         />

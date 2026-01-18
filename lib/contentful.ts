@@ -56,6 +56,19 @@ export interface EventFields {
   eventType?: string
 }
 
+export interface AlertFields {
+  title: string
+  message: string
+  severity: 'info' | 'warning' | 'critical'
+  link?: string
+  linkText?: string
+  dismissible?: boolean
+  active?: boolean
+  startsAt?: string
+  expiresAt?: string
+  priority?: number
+}
+
 // Fetch all departments
 export async function getDepartments(preview = false) {
   const response = await getClient(preview).getEntries({
@@ -161,6 +174,35 @@ export async function getUpcomingEvents(limit?: number, preview = false) {
   const visibleItems = response.items.filter(isContentVisible)
   // Return only the requested number of items
   return limit ? visibleItems.slice(0, limit) : visibleItems
+}
+
+// Fetch active alerts (visible on the site)
+export async function getActiveAlerts(preview = false) {
+  const response = await getClient(preview).getEntries({
+    content_type: 'alert',
+  })
+
+  const now = new Date()
+
+  // Filter to only alerts that have started and haven't expired
+  return response.items.filter((item: any) => {
+    const fields = item.fields
+    // Check if started (if startsAt is set, it must be in the past)
+    if (fields.startsAt && new Date(fields.startsAt) > now) return false
+    // Check if expired
+    if (fields.expiresAt && new Date(fields.expiresAt) < now) return false
+    return true
+  }).sort((a: any, b: any) => {
+    // Sort by priority (higher first), then by severity
+    const priorityA = a.fields.priority || 0
+    const priorityB = b.fields.priority || 0
+    if (priorityB !== priorityA) return priorityB - priorityA
+    // Then by severity
+    const severityOrder = { critical: 0, warning: 1, info: 2 }
+    const sevA = severityOrder[a.fields.severity as keyof typeof severityOrder] ?? 2
+    const sevB = severityOrder[b.fields.severity as keyof typeof severityOrder] ?? 2
+    return sevA - sevB
+  })
 }
 
 // Get all content for chatbot knowledge base

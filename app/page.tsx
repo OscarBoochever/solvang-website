@@ -3,6 +3,7 @@ import QuickLinks from '@/components/home/QuickLinks'
 import ChatSection from '@/components/chat/ChatSection'
 import NewsSectionCMS from '@/components/home/NewsSectionCMS'
 import EventsSidebarCMS from '@/components/home/EventsSidebarCMS'
+import SocialMediaFeed from '@/components/home/SocialMediaFeed'
 
 export const revalidate = 60 // Revalidate content every 60 seconds
 
@@ -38,6 +39,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Social Media Feed */}
+      <SocialMediaFeed />
     </>
   )
 }

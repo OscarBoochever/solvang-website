@@ -82,6 +82,7 @@ export default async function NewsPage() {
                       alt={fields.title || 'News image'}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{ objectPosition: `${fields.focalPointX ?? 50}% ${fields.focalPointY ?? 50}%` }}
                     />
                   </div>
                 ) : (

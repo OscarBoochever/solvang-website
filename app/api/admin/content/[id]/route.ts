@@ -48,23 +48,27 @@ export async function PUT(
     const { id } = await params
     const { fields, richTextFields = [] } = await request.json()
 
-    // Combine scheduledDate and scheduledTime into scheduledPublish ISO string
-    // Use Pacific time (Solvang, CA timezone) for scheduling
-    if (fields.scheduledDate && fields.scheduledTime) {
-      const dateTimeStr = `${fields.scheduledDate}T${fields.scheduledTime}:00`
-      // Parse input as Pacific time and convert to UTC
-      const targetDate = new Date(dateTimeStr)
-      const pacificTime = new Date(targetDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }))
-      const offset = targetDate.getTime() - pacificTime.getTime()
-      const utcDateTime = new Date(targetDate.getTime() + offset)
-      fields.scheduledPublish = utcDateTime.toISOString()
-    } else if (!fields.scheduledDate) {
-      // Clear scheduledPublish if no date is set
-      fields.scheduledPublish = ''
+    console.log('API received fields:', JSON.stringify(fields, null, 2))
+
+    // Combine scheduledDate and scheduledTime into scheduledPublish ISO string (for news/events)
+    // Only process if scheduledDate was actually provided in the request
+    if ('scheduledDate' in fields || 'scheduledTime' in fields) {
+      if (fields.scheduledDate && fields.scheduledTime) {
+        const dateTimeStr = `${fields.scheduledDate}T${fields.scheduledTime}:00`
+        // Parse input as Pacific time and convert to UTC
+        const targetDate = new Date(dateTimeStr)
+        const pacificTime = new Date(targetDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }))
+        const offset = targetDate.getTime() - pacificTime.getTime()
+        const utcDateTime = new Date(targetDate.getTime() + offset)
+        fields.scheduledPublish = utcDateTime.toISOString()
+      } else {
+        // Clear scheduledPublish if no date is set (use null for Date fields)
+        fields.scheduledPublish = null
+      }
+      // Remove the separate date/time fields
+      delete fields.scheduledDate
+      delete fields.scheduledTime
     }
-    // Remove the separate date/time fields
-    delete fields.scheduledDate
-    delete fields.scheduledTime
 
     // Handle image asset link
     const imageAssetId = fields.imageAssetId
@@ -80,9 +84,12 @@ export async function PUT(
           processedFields[key] = { 'en-US': createRichText(value) }
         }
         // Skip empty rich text fields
+      } else if (value === null) {
+        // Explicitly clear the field if null
+        processedFields[key] = { 'en-US': null }
       } else {
-        // Allow empty values for non-rich-text fields
-        processedFields[key] = { 'en-US': value || '' }
+        // Allow empty string values for non-rich-text fields
+        processedFields[key] = { 'en-US': value }
       }
     })
 
@@ -101,6 +108,8 @@ export async function PUT(
       // Remove image if explicitly set to null
       processedFields.image = { 'en-US': null }
     }
+
+    console.log('Processed fields to save:', JSON.stringify(processedFields, null, 2))
 
     const entry = await updateEntry(id, processedFields)
 

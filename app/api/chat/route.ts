@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { systemPrompt } from '@/lib/solvang-data';
 import { getAllContentForChatbot } from '@/lib/contentful';
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
+import { richTextToPlainText } from '@/lib/richTextUtils';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -20,13 +20,13 @@ async function buildKnowledgeBase() {
       const fields = dept.fields as any;
       knowledge += `\n**${fields.name}**\n`;
       if (fields.description) {
-        knowledge += `Description: ${documentToPlainTextString(fields.description)}\n`;
+        knowledge += `Description: ${richTextToPlainText(fields.description)}\n`;
       }
       if (fields.phone) knowledge += `Phone: ${fields.phone}\n`;
       if (fields.email) knowledge += `Email: ${fields.email}\n`;
       if (fields.address) knowledge += `Address: ${fields.address}\n`;
       if (fields.content) {
-        knowledge += `Details: ${documentToPlainTextString(fields.content)}\n`;
+        knowledge += `Details: ${richTextToPlainText(fields.content)}\n`;
       }
     }
 
@@ -36,7 +36,7 @@ async function buildKnowledgeBase() {
       const fields = page.fields as any;
       knowledge += `\n**${fields.title}** (/${fields.slug})\n`;
       if (fields.content) {
-        knowledge += `${documentToPlainTextString(fields.content)}\n`;
+        knowledge += `${richTextToPlainText(fields.content)}\n`;
       }
     }
 
@@ -57,7 +57,7 @@ async function buildKnowledgeBase() {
       if (fields.location) knowledge += ` (${fields.location})`;
       knowledge += '\n';
       if (fields.description) {
-        knowledge += `${documentToPlainTextString(fields.description)}\n`;
+        knowledge += `${richTextToPlainText(fields.description)}\n`;
       }
     }
 

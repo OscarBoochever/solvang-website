@@ -1,0 +1,174 @@
+{
+  "items": [
+    {
+      "id": "how-to",
+      "label": "How To",
+      "url": "/how-to",
+      "children": [
+        {
+          "id": "how-to-pay",
+          "label": "Pay a Bill",
+          "url": "/how-to#pay-a-bill"
+        },
+        {
+          "id": "how-to-report",
+          "label": "Report a Concern",
+          "url": "/report-concern"
+        },
+        {
+          "id": "how-to-records",
+          "label": "Public Records Request",
+          "url": "/public-records"
+        },
+        {
+          "id": "how-to-permit",
+          "label": "Apply for a Permit",
+          "url": "/how-to#apply-for-a-permit"
+        },
+        {
+          "id": "how-to-alerts",
+          "label": "Sign Up for Alerts",
+          "url": "/how-to#sign-up-for-alerts"
+        },
+        {
+          "id": "how-to-contact",
+          "label": "Contact Us",
+          "url": "/contact"
+        }
+      ]
+    },
+    {
+      "id": "city-council",
+      "label": "City Council",
+      "url": "/city-council",
+      "children": [
+        {
+          "id": "council-members",
+          "label": "Current Council Members",
+          "url": "/city-council#current-council-members"
+        },
+        {
+          "id": "council-meetings",
+          "label": "Meetings",
+          "url": "/city-council#city-council-meetings"
+        },
+        {
+          "id": "council-news",
+          "label": "News & Announcements",
+          "url": "/news"
+        },
+        {
+          "id": "council-events",
+          "label": "Events Calendar",
+          "url": "/events"
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "url": "/business",
+      "children": [
+        {
+          "id": "business-start",
+          "label": "Start a Business",
+          "url": "/business#starting-a-business"
+        },
+        {
+          "id": "business-licenses",
+          "label": "Licenses & Permits",
+          "url": "/business#licenses--permits"
+        },
+        {
+          "id": "business-bids",
+          "label": "Bid Opportunities",
+          "url": "/business#bid-opportunities"
+        },
+        {
+          "id": "business-zoning",
+          "label": "Zoning Info",
+          "url": "/business#zoning--land-use"
+        }
+      ]
+    },
+    {
+      "id": "departments",
+      "label": "Departments",
+      "url": "/departments",
+      "children": [
+        {
+          "id": "dept-city-hall",
+          "label": "City Hall",
+          "url": "/departments/city-hall"
+        },
+        {
+          "id": "dept-community",
+          "label": "Community Development",
+          "url": "/departments/community-development"
+        },
+        {
+          "id": "dept-economic",
+          "label": "Economic Development",
+          "url": "/departments/economic-development"
+        },
+        {
+          "id": "dept-parks",
+          "label": "Parks & Recreation",
+          "url": "/departments/parks-recreation"
+        },
+        {
+          "id": "dept-planning",
+          "label": "Planning & Building",
+          "url": "/departments/planning"
+        },
+        {
+          "id": "dept-safety",
+          "label": "Public Safety",
+          "url": "/departments/public-safety"
+        },
+        {
+          "id": "dept-works",
+          "label": "Public Works",
+          "url": "/departments/public-works"
+        },
+        {
+          "id": "dept-utilities",
+          "label": "Utilities",
+          "url": "/departments/utilities"
+        }
+      ]
+    },
+    {
+      "id": "visitors",
+      "label": "Visitors",
+      "url": "/visitors",
+      "children": [
+        {
+          "id": "visitors-about",
+          "label": "About Solvang",
+          "url": "/visitors#about-solvang"
+        },
+        {
+          "id": "visitors-todo",
+          "label": "Things to Do",
+          "url": "/visitors#things-to-do"
+        },
+        {
+          "id": "visitors-events",
+          "label": "Special Events",
+          "url": "/visitors#special-events"
+        },
+        {
+          "id": "visitors-history",
+          "label": "Solvang History",
+          "url": "/solvang-history"
+        },
+        {
+          "id": "visitors-getting",
+          "label": "Getting Here",
+          "url": "/visitors#getting-here"
+        }
+      ]
+    }
+  ]
+}

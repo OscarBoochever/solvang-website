@@ -243,18 +243,37 @@ export default function AdminDashboard() {
                 <p className="text-xs text-gray-400 mt-2">Coming soon - database integration required</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-amber-500">
+              <Link
+                href="/admin/alerts"
+                className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-amber-500 hover:shadow-md transition-shadow group block"
+              >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                     <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <h4 className="font-semibold text-gray-800">Site Alerts</h4>
+                  <h4 className="font-semibold text-gray-800 group-hover:text-navy-600 transition-colors">Site Alerts</h4>
                 </div>
                 <p className="text-sm text-gray-500">Manage emergency and informational alerts</p>
-                <p className="text-xs text-gray-400 mt-2">Edit lib/alerts.ts or integrate with CMS</p>
-              </div>
+                <p className="text-xs text-amber-600 mt-2 group-hover:underline">Manage Alerts →</p>
+              </Link>
+
+              <Link
+                href="/admin/menu"
+                className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-indigo-500 hover:shadow-md transition-shadow group block"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-gray-800 group-hover:text-navy-600 transition-colors">Menu Manager</h4>
+                </div>
+                <p className="text-sm text-gray-500">Add, edit, and reorder navigation menu items</p>
+                <p className="text-xs text-indigo-600 mt-2 group-hover:underline">Manage Menu →</p>
+              </Link>
             </div>
           </div>
         )}

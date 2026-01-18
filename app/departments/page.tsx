@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getDepartments } from '@/lib/contentful'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { richTextToPlainText } from '@/lib/richTextUtils'
 import Translated from '@/components/Translated'
 import Breadcrumb from '@/components/Breadcrumb'
 
@@ -26,9 +26,7 @@ export default async function DepartmentsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {departments.map((dept: any) => {
             const fields = dept.fields
-            const description = fields.description
-              ? documentToPlainTextString(fields.description)
-              : ''
+            const description = richTextToPlainText(fields.description)
 
             return (
               <Link

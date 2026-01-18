@@ -9,9 +9,33 @@ async function getEnvironment() {
   return space.getEnvironment('master')
 }
 
-// Helper to create rich text from plain text
+// Helper to create rich text from plain text or HTML
 export function createRichText(text: string) {
   if (!text) return null
+
+  // Check if content contains HTML tags - if so, wrap it in a special structure
+  // that we can detect and render directly on the frontend
+  const containsHtml = /<[^>]+>/.test(text)
+
+  if (containsHtml) {
+    // Store HTML in a single paragraph with a special marker
+    return {
+      nodeType: 'document',
+      data: { isHtml: true },
+      content: [{
+        nodeType: 'paragraph',
+        data: {},
+        content: [{
+          nodeType: 'text',
+          value: text,
+          marks: [],
+          data: {},
+        }],
+      }],
+    }
+  }
+
+  // Plain text - split into paragraphs
   const paragraphs = text.split('\n\n').filter(p => p.trim())
   return {
     nodeType: 'document',

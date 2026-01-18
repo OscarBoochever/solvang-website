@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 export default function EditEvent() {
   const [loading, setLoading] = useState(true)
@@ -52,12 +53,23 @@ export default function EditEvent() {
         hour12: false
       })
     }
+    // Get description - check if it's our custom HTML format or Contentful rich text
+    let descriptionHtml = ''
+    const descField = fields.description?.['en-US']
+    if (descField) {
+      if (descField.data?.isHtml) {
+        descriptionHtml = descField.content?.[0]?.content?.[0]?.value || ''
+      } else {
+        descriptionHtml = documentToHtmlString(descField)
+      }
+    }
+
     setForm({
       title: fields.title?.['en-US'] || '',
       date: fields.date?.['en-US'] || new Date().toISOString().split('T')[0],
       time: fields.time?.['en-US'] || '',
       location: fields.location?.['en-US'] || '',
-      description: fields.description?.['en-US'] ? documentToPlainTextString(fields.description['en-US']) : '',
+      description: descriptionHtml,
       eventType: fields.eventType?.['en-US'] || 'meeting',
       status: fields.status?.['en-US'] || 'published',
       scheduledDate,
@@ -151,7 +163,11 @@ export default function EditEvent() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" placeholder="Event details" />
+            <RichTextEditor
+              value={form.description}
+              onChange={(description) => setForm({ ...form, description })}
+              placeholder="Event details..."
+            />
           </div>
 
           <div className="flex gap-4 pt-4 border-t">

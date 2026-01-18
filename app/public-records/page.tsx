@@ -15,6 +15,7 @@ export default function PublicRecordsPage() {
         <Breadcrumb
           items={[
             { label: 'Home', href: '/' },
+            { label: 'How To', href: '/how-to' },
             { label: 'Public Records Request' },
           ]}
         />

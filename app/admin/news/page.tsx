@@ -74,6 +74,7 @@ export default function AdminNews() {
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Status</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Category</th>
                 <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Date</th>
+                <th className="text-left px-6 py-3 text-sm font-medium text-gray-500">Edited</th>
                 <th className="text-right px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
@@ -111,6 +112,14 @@ export default function AdminNews() {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">{fields.category?.['en-US']}</td>
                     <td className="px-6 py-4 text-sm text-gray-500">{fields.publishDate?.['en-US']}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {entry.sys.updatedAt && (
+                        <div>
+                          <div>{new Date(entry.sys.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' })}</div>
+                          <div className="text-xs text-gray-400">{new Date(entry.sys.updatedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' })}</div>
+                        </div>
+                      )}
+                    </td>
                     <td className="px-6 py-4 text-right">
                       {permissions.canEdit && (
                         <Link href={`/admin/news/${entry.sys.id}`} className="text-navy-600 hover:text-navy-800 text-sm font-medium mr-4">Edit</Link>

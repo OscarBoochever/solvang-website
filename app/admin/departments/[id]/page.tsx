@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 export default function EditDepartment() {
   const [loading, setLoading] = useState(true)
@@ -40,11 +41,23 @@ export default function EditDepartment() {
     const data = await res.json()
     const fields = data.entry?.fields || {}
 
+    // Helper to convert rich text field to HTML
+    const getHtmlFromField = (field: any) => {
+      if (!field) return ''
+      if (field.data?.isHtml) {
+        // Our custom HTML format - extract the raw HTML
+        return field.content?.[0]?.content?.[0]?.value || ''
+      } else {
+        // Contentful rich text - convert to HTML
+        return documentToHtmlString(field)
+      }
+    }
+
     setForm({
       name: fields.name?.['en-US'] || '',
       slug: fields.slug?.['en-US'] || '',
-      description: fields.description?.['en-US'] ? documentToPlainTextString(fields.description['en-US']) : '',
-      content: fields.content?.['en-US'] ? documentToPlainTextString(fields.content['en-US']) : '',
+      description: getHtmlFromField(fields.description?.['en-US']),
+      content: getHtmlFromField(fields.content?.['en-US']),
       phone: fields.phone?.['en-US'] || '',
       email: fields.email?.['en-US'] || '',
       address: fields.address?.['en-US'] || '',
@@ -134,12 +147,10 @@ export default function EditDepartment() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea
-              rows={6}
+            <RichTextEditor
               value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent"
-              placeholder="Full content for the department page. Separate paragraphs with blank lines."
+              onChange={(content) => setForm({ ...form, content })}
+              placeholder="Start typing department content..."
             />
           </div>
 

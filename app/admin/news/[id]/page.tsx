@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import RichTextEditor from '@/components/admin/RichTextEditor'
 
 export default function EditNews() {
   const [loading, setLoading] = useState(true)
@@ -13,7 +14,9 @@ export default function EditNews() {
   const [dragActive, setDragActive] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [imageAssetId, setImageAssetId] = useState<string | null>(null)
+  const [focalPoint, setFocalPoint] = useState({ x: 50, y: 50 })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
   const [form, setForm] = useState({
     title: '',
     slug: '',
@@ -58,11 +61,24 @@ export default function EditNews() {
         hour12: false
       })
     }
+    // Get content - check if it's our custom HTML format or Contentful rich text
+    let contentHtml = ''
+    const contentField = fields.content?.['en-US']
+    if (contentField) {
+      if (contentField.data?.isHtml) {
+        // Our custom HTML format - extract the raw HTML
+        contentHtml = contentField.content?.[0]?.content?.[0]?.value || ''
+      } else {
+        // Contentful rich text - convert to HTML
+        contentHtml = documentToHtmlString(contentField)
+      }
+    }
+
     setForm({
       title: fields.title?.['en-US'] || '',
       slug: fields.slug?.['en-US'] || '',
       excerpt: fields.excerpt?.['en-US'] || '',
-      content: fields.content?.['en-US'] ? documentToPlainTextString(fields.content['en-US']) : '',
+      content: contentHtml,
       category: fields.category?.['en-US'] || 'Announcement',
       publishDate: fields.publishDate?.['en-US'] || new Date().toISOString().split('T')[0],
       status: fields.status?.['en-US'] || 'published',
@@ -81,6 +97,13 @@ export default function EditNews() {
           setImagePreview(`https:${assetData.url}`)
         }
       }
+    }
+    // Load focal point if present
+    if (fields.focalPointX?.['en-US'] !== undefined && fields.focalPointY?.['en-US'] !== undefined) {
+      setFocalPoint({
+        x: fields.focalPointX['en-US'],
+        y: fields.focalPointY['en-US'],
+      })
     }
     setLoading(false)
   }
@@ -143,6 +166,15 @@ export default function EditNews() {
   const removeImage = () => {
     setImagePreview(null)
     setImageAssetId(null)
+    setFocalPoint({ x: 50, y: 50 })
+  }
+
+  const handleFocalPointClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageContainerRef.current) return
+    const rect = imageContainerRef.current.getBoundingClientRect()
+    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100)
+    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100)
+    setFocalPoint({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -155,7 +187,12 @@ export default function EditNews() {
     setSaving(true)
     const url = isNew ? '/api/admin/content' : `/api/admin/content/${params.id}`
     const method = isNew ? 'POST' : 'PUT'
-    const fieldsWithImage = { ...form, imageAssetId }
+    const fieldsWithImage = {
+      ...form,
+      imageAssetId,
+      focalPointX: focalPoint.x,
+      focalPointY: focalPoint.y,
+    }
     const body = isNew
       ? { contentType: 'news', fields: fieldsWithImage, richTextFields: ['content'] }
       : { fields: fieldsWithImage, richTextFields: ['content'] }
@@ -230,19 +267,42 @@ export default function EditNews() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Featured Image</label>
             {imagePreview ? (
-              <div className="relative">
-                <div className="relative h-48 rounded-lg overflow-hidden bg-gray-100">
-                  <Image src={imagePreview} alt="Preview" fill className="object-cover" />
-                </div>
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
+              <div className="space-y-2">
+                <div
+                  ref={imageContainerRef}
+                  onClick={handleFocalPointClick}
+                  className="relative h-48 rounded-lg overflow-hidden bg-gray-100 cursor-crosshair"
+                  title="Click to set focal point"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: `${focalPoint.x}% ${focalPoint.y}%` }}
+                  />
+                  {/* Focal point indicator */}
+                  <div
+                    className="absolute w-6 h-6 -ml-3 -mt-3 border-2 border-white rounded-full shadow-lg pointer-events-none"
+                    style={{
+                      left: `${focalPoint.x}%`,
+                      top: `${focalPoint.y}%`,
+                      backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    }}
+                  >
+                    <div className="absolute inset-1 border border-white rounded-full" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeImage(); }}
+                    className="absolute top-2 right-2 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">Click on the image to set the focal point for cropping</p>
               </div>
             ) : (
               <div
@@ -284,7 +344,11 @@ export default function EditNews() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea rows={8} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-transparent" placeholder="Full article content. Separate paragraphs with blank lines." />
+            <RichTextEditor
+              value={form.content}
+              onChange={(content) => setForm({ ...form, content })}
+              placeholder="Start typing your article content..."
+            />
           </div>
 
           <div className="flex gap-4 pt-4 border-t">

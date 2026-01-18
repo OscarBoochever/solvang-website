@@ -28,24 +28,39 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-// Storage key for localStorage
+// Storage keys for localStorage
 const CACHE_KEY = 'solvang-translation-cache'
+const LANGUAGE_KEY = 'solvang-language'
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState('en')
+  const [language, setLanguageState] = useState('en')
   const [cache, setCache] = useState<TranslationCache>({})
   const [isTranslating, setIsTranslating] = useState(false)
 
   // Track pending requests to avoid duplicate API calls
   const pendingRequests = useRef<Map<string, Promise<string>>>(new Map())
 
-  // Load cache from localStorage on mount
+  // Load language and cache from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(CACHE_KEY)
-      if (saved) {
-        setCache(JSON.parse(saved))
+      const savedLanguage = localStorage.getItem(LANGUAGE_KEY)
+      if (savedLanguage) {
+        setLanguageState(savedLanguage)
       }
+      const savedCache = localStorage.getItem(CACHE_KEY)
+      if (savedCache) {
+        setCache(JSON.parse(savedCache))
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [])
+
+  // Wrapper to save language to localStorage when changed
+  const setLanguage = useCallback((lang: string) => {
+    setLanguageState(lang)
+    try {
+      localStorage.setItem(LANGUAGE_KEY, lang)
     } catch {
       // Ignore localStorage errors
     }

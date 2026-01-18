@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Translated from '@/components/Translated'
+import { useLanguage } from '@/lib/LanguageContext'
 
 interface FormData {
   name: string
@@ -44,6 +45,22 @@ export default function PublicRecordsForm() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [referenceId, setReferenceId] = useState('')
+  const { language, translate } = useLanguage()
+
+  // Translated options
+  const [translatedFormats, setTranslatedFormats] = useState<string[]>(formatOptions.map(o => o.label))
+
+  // Translate dropdown options when language changes
+  useEffect(() => {
+    if (language === 'en') {
+      setTranslatedFormats(formatOptions.map(o => o.label))
+      return
+    }
+
+    // Translate format options
+    Promise.all(formatOptions.map(opt => translate(opt.label)))
+      .then(setTranslatedFormats)
+  }, [language, translate])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -324,9 +341,9 @@ export default function PublicRecordsForm() {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy-500 focus:border-navy-500 bg-white"
             >
-              {formatOptions.map((option) => (
+              {formatOptions.map((option, index) => (
                 <option key={option.value} value={option.value}>
-                  {option.label}
+                  {translatedFormats[index]}
                 </option>
               ))}
             </select>

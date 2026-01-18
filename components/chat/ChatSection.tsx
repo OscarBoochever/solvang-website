@@ -17,10 +17,19 @@ const suggestedQuestions = [
   "What are City Hall hours?",
 ]
 
+// Follow-up suggestions shown after first response
+const followUpSuggestions = [
+  "Report an issue",
+  "Contact the city",
+  "Find a form",
+  "Get city alerts",
+]
+
 export default function ChatSection() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+
 
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -122,6 +131,21 @@ export default function ChatSection() {
                           <div className="w-2 h-2 bg-navy-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       </div>
+                    </div>
+                  )}
+                  {/* Follow-up suggestions after conversation starts */}
+                  {!isLoading && messages.length > 0 && messages.length < 6 && (
+                    <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-gray-100">
+                      <span className="text-xs text-gray-400 w-full mb-1">Quick actions:</span>
+                      {followUpSuggestions.map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          onClick={() => sendMessage(suggestion)}
+                          className="px-2.5 py-1 bg-navy-50 border border-navy-200 rounded-full text-xs text-navy-700 hover:bg-navy-100 hover:border-navy-300 transition-colors"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
                     </div>
                   )}
                 </>

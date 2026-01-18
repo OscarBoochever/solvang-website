@@ -1,5 +1,5 @@
 import { getEvents } from '@/lib/contentful'
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer'
+import { richTextToPlainText } from '@/lib/richTextUtils'
 import CalendarView from './CalendarView'
 import Translated from '@/components/Translated'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -18,9 +18,7 @@ export default async function EventsPage() {
       date: fields.date,
       time: fields.time || '',
       location: fields.location || '',
-      description: fields.description
-        ? documentToPlainTextString(fields.description)
-        : '',
+      description: richTextToPlainText(fields.description),
       eventType: fields.eventType || 'meeting',
     }
   })
