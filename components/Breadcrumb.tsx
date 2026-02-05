@@ -19,7 +19,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      item: item.href ? `https://oscarboochever.com${item.href}` : undefined,
+      item: item.href ? `https://solvang-website.vercel.app${item.href}` : undefined,
     })),
   }
 

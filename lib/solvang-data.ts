@@ -18,13 +18,13 @@ export const solvangData = {
     address: "1644 Oak Street, Solvang, CA 93463",
     phone: "(805) 688-5575",
     hours: "Monday through Friday, 8:00 AM to 5:00 PM",
-    website: "https://www.oscarboochever.com",
+    website: "https://solvang-website.vercel.app",
     email: "info@cityofsolvang.com",
   },
 };
 
 // Base URL for the site
-const SITE_URL = "https://www.oscarboochever.com";
+const SITE_URL = "https://solvang-website.vercel.app";
 
 export const systemPrompt = `You are the Solvang City Assistant, an AI-powered assistant for the City of Solvang, California — "The Danish Capital of America."
 
